@@ -294,7 +294,7 @@
           <select name="customer" id="customer" class="form-control text-dark bg-light" >
             <option value=""></option>
             {% for c in customer %}
-            <option value="{{c.id}} {{ c.customerName }} ">{{ c.customerName }}</option>
+            <option value="{{c.id}} {{ c.customerName }}">{{ c.customerName }}</option>
             {% endfor %}
           </select>
           <a href="" data-toggle="modal" data-target="#newcustomer">+ Add New Customer</a>
@@ -358,7 +358,7 @@
                     <select name='item[]' id="item" class="form-control item text-dark bg-light" >
                       <option value=" " selected disabled>Select Item</option>
                       {% for i in item %}
-                        <option value="{{i.id}}">{{ i.Name  }} </option>
+                        <option value="{{i.id}}">{{ i.Name }} </option>
                       {% endfor %}
                     </select>
                     
@@ -1466,11 +1466,11 @@
                   <div class="col-md-6 mt-2">
                     <div class="d-flex">
                       <div class="radio_opt mx-5 mt-2">
-                        <input type="radio" id="tax" name="radioCust1" value="Taxable" >
+                        <input type="radio" id="custtax1" name="radioCust1" value="Taxable" >
                         <label for="option1">Taxable</label>
                       </div>
                       <div class="radio_opt mx-4 mt-2">
-                        <input type="radio" id="taxe" name="radioCust1" value="Tax-exempt" >
+                        <input type="radio" id="custtax2" name="radioCust1" value="Tax-exempt" >
                         <label for="option2">Tax-exempt</label>
                       </div>
                     </div>
@@ -1500,11 +1500,11 @@
 
                 <div class="row mt-2">
                   <div class="col-md-3 mt-2">
-                    <label for="v_terms">Payment Terms</label>
+                    <label for="c_terms">Payment Terms</label>
                   </div>
                   <div class="col-md-6 mt-2">
                     <div class="d-flex">
-                      <select class="form-control text-dark bg-light" id="v_terms" name="v_terms" required>
+                      <select class="form-control text-dark bg-light" id="c_terms" name="c_terms" required>
                         <option selected value="15">NET 15</option>
                         <option value="30">NET 30</option>
                         <option value="45">NET 45</option>
@@ -1535,25 +1535,43 @@
                 <div class="row mt-2 m-0 p-0 mb-2">
                   <div class="col-md-9"> </div>
                   <div class="col-md-3 text-right  m-0 p-0">
-                    <input type="checkbox" onclick="addressSame()" id="vokay" name="vokay">
+                    <input type="checkbox" onclick="addressSame()" id="cokay" name="cokay">
                     <label for="vokay" style="color: #909091;">Same As Billing Address</label>
                   </div>
                 </div>
 
                 <div class="row mt-5">
                   <div class="col-md-1">
-                    <label for="vstreet">Street</label>
+                    <label for="cstreet1">Address 1</label>
                   </div>
                   <div class="col-md-4">
-                    <textarea class="form-control street text-dark bg-light" id="vstreet" name="vstreet"></textarea>
+                    <textarea class="form-control street text-dark bg-light" id="cstreet1" name="cstreet1"></textarea>
                   </div>
                   <div class="col-md-1"></div>
 
                   <div class="col-md-1">
-                    <label for="vsstreet">Street</label>
+                    <label for="csstreet1">Address 1</label>
                   </div>
                   <div class="col-md-4 ">
-                    <textarea class="form-control street text-dark bg-light" id="vsstreet" name="vsstreet"></textarea>
+                    <textarea class="form-control street text-dark bg-light" id="csstreet1" name="csstreet1"></textarea>
+                  </div>
+                  <div class="col-md-1"></div>
+
+                </div>
+                <div class="row mt-5">
+                  <div class="col-md-1">
+                    <label for="cstreet2">Address 2</label>
+                  </div>
+                  <div class="col-md-4">
+                    <textarea class="form-control street text-dark bg-light" id="cstreet2" name="cstreet2"></textarea>
+                  </div>
+                  <div class="col-md-1"></div>
+
+                  <div class="col-md-1">
+                    <label for="csstreet2">Address 2</label>
+                  </div>
+                  <div class="col-md-4 ">
+                    <textarea class="form-control street text-dark bg-light" id="csstreet2" name="csstreet2"></textarea>
                   </div>
                   <div class="col-md-1"></div>
 
@@ -1561,18 +1579,18 @@
 
                 <div class="row mt-2">
                   <div class="col-md-1">
-                    <label for="vcity">City</label>
+                    <label for="ccity">City</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control text-dark bg-light" id="vcity" name="vcity" placeholder="City">  
+                    <input type="text" class="form-control text-dark bg-light" id="ccity" name="ccity" placeholder="City">  
                   </div>
                   <div class="col-md-1">
                   </div>
                   <div class="col-md-1">
-                    <label for="vscity">City</label>
+                    <label for="cscity">City</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control text-dark bg-light" id="vscity" name="vscity" placeholder="City">  
+                    <input type="text" class="form-control text-dark bg-light" id="cscity" name="cscity" placeholder="City">  
                   </div>
                   <div class="col-md-1">
                   </div>
@@ -1580,10 +1598,10 @@
 
                 <div class="row mt-2">
                   <div class="col-md-1">
-                    <label for="vstate">State</label>
+                    <label for="cstate">State</label>
                   </div>
                   <div class="col-md-4">
-                    <select type="text" class="form-control text-dark bg-light" id="vstate" name="vstate">
+                    <select type="text" class="form-control text-dark bg-light" id="cstate" name="cstate">
                       <option value="" selected>Choose</option>
                       <option value="None Of This">None Of This</option>
                       <option value="Andaman and Nicobar Islads">Andaman and Nicobar Islads</option>
@@ -1629,10 +1647,10 @@
                   <div class="col-md-1"></div>
   
                   <div class="col-md-1">
-                    <label for="vsstate">State</label>
+                    <label for="csstate">State</label>
                   </div>
                   <div class="col-md-4 ">
-                    <select type="text" class="form-control text-dark bg-light" id="vsstate" name="vsstate">
+                    <select type="text" class="form-control text-dark bg-light" id="csstate" name="csstate">
                       <option value="" selected>Choose</option>
                       <option value="None Of This">None Of This</option>
                       <option value="Andaman and Nicobar Islads">Andaman and Nicobar Islads
@@ -1683,18 +1701,18 @@
 
                 <div class="row mt-2">
                   <div class="col-md-1">
-                    <label for="vcountry">Country</label>
+                    <label for="ccountry">Country</label>
                   </div>
                   <div class="col-md-4 ">
-                    <input type="text" class="form-control text-dark bg-light" id="vcountry" name="vcountry" placeholder="Country">  
+                    <input type="text" class="form-control text-dark bg-light" id="ccountry" name="ccountry" placeholder="Country">  
                   </div>
                   <div class="col-md-1"></div>
 
                   <div class="col-md-1">
-                    <label for="vscountry">Country</label>
+                    <label for="cscountry">Country</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control text-dark bg-light" id="vscountry"  name="vscountry" placeholder="Country">
+                    <input type="text" class="form-control text-dark bg-light" id="cscountry"  name="cscountry" placeholder="Country">
                   </div>
                   <div class="col-md-1 "></div>
 
@@ -1703,18 +1721,18 @@
                 <div class="row mt-2">
 
                   <div class="col-md-1">
-                    <label for="vpincode">Pincode</label>
+                    <label for="cpincode">Pincode</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control text-dark bg-light" id="vpincode" name="vpincode" maxlength="6" placeholder="PIN Code"> 
+                    <input type="text" class="form-control text-dark bg-light" id="cpincode" name="cpincode" maxlength="6" placeholder="PIN Code"> 
                   </div>
                   <div class="col-md-1"></div>
 
                   <div class="col-md-1">
-                    <label for="vspincode">Pincode</label>
+                    <label for="cspincode">Pincode</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control text-dark bg-light" id="vspincode" name="vspincode" maxlength="6" placeholder="PIN Code">  
+                    <input type="text" class="form-control text-dark bg-light" id="cspincode" name="cspincode" maxlength="6" placeholder="PIN Code">  
                   </div>
                   <div class="col-md-1"></div>
 
@@ -1723,7 +1741,7 @@
                 <div class="row mt-2">
 
                   <div class="col-md-1">
-                    <label for="vphone">Phone</label>
+                    <label for="cphone">Phone</label>
                   </div>
                   <div class="col-md-4">
                     <input type="text" class="form-control text-dark bg-light" id="cphone" name="cphone" placeholder="Phone"> 
@@ -2503,6 +2521,12 @@ $(document).ready(function() {
       $("#vdisplayname").text($("#title").val() +" " + $("#fname").val() + " " + $("#lname").val());
     });
   });
+  $(document).ready(function() {
+    $("#cfname, #clname").change(function() {
+      $("#cdisplayname").text($("#ctitle").val() +" " + $("#cfname").val() + " " + $("#clname").val());
+      // console.log($("#cdisplayname").text())
+    });
+  });
 
 
   $(document).ready(function() {
@@ -2651,8 +2675,108 @@ function reloadVendor() {
       var dropdown = $('#vendor');
       dropdown.empty();
       $.each(data, function(key, value) {
-          console.log(value)
-          dropdown.append($('<option></option>').attr('value', key).text(value[0]).val(value[1]));
+          // console.log(value)
+          dropdown.append($('<option></option>').attr('value', key).text(value[0]+" " +value[1] + ' ' + value[2]).val(value[1] + ' ' + value[2]+ ' ' +value[3]));
+      });
+    },
+    error: function(xhr, status, error) {
+    console.error(xhr.responseText);
+    }
+  });
+}
+
+
+
+//---------modal customer-----
+
+$(document).on("click","#customerSave",function(){
+
+  if ($('input[name="radioCust"]:checked').val() == 'Business'){
+
+    custType = $('#business').val();
+  }
+  else{
+    custType = $('#individual').val();
+  }
+    
+  if ($('input[name="radioCust1"]:checked').val() == 'Taxable'){
+    cust_tax = $('#custtax1').val();
+  }
+  else{
+      cust_tax = $('#custtax2').val();
+  }
+    console.log(cust_tax);
+  $.ajax({
+    
+    type : 'POST',
+    url:"{% url 'recurbills_customer' %}",
+
+    data:{
+        // title : $("#title").val(),
+        // firstname : $("#fname").val(),
+        // lastname : $("#lname").val(),
+        // company_name : $("#vcompany").val(),
+        customer_type : custType,
+        display_name : $('#cdisplayname').text(),
+        company_name : $('#ccompany').val(),
+        email : $("#cemail").val(),
+        work_mobile :$("#cw_mobile").val(),
+        pers_mobile :$("#cp_mobile").val(),
+        facebook :$("#facebook").val(),
+        twitter :$("#twitter").val(),
+        website :$("#website").val(),
+        skype :$("#cskype").val(),
+        desg :$("#c_desg").val(),
+        dpt :$("#c_dpt").val(),
+        gsttype :$("#c_gsttype").val(),
+        // gstin :$("#v_gstin").val(),
+        // panno : $("#v_pan").val(),
+        placeofsupply :$("#placesupply").val(),
+        tax_preference :cust_tax,
+        currency : $("#c_curn").val(),
+        openingbalance : $("#c_open").val(),
+        paymentterms : $("#c_terms").val(),
+        street1 : $("#cstreet1").val(),
+        street2 : $("#cstreet2").val(),
+        city : $("#ccity").val(),
+        state : $("#cstate").val(),
+        pincode : $("#cpincode").val(),
+        fax : $("#cfax").val(),
+        phone : $("#cphone").val(),
+        country : $("ccountry").val(),
+        // shipstreet1 : $("#csstreet1").val(),
+        // shipstreet2 : $("#csstreet2").val(),
+        // shipcity : $("#cscity").val(),
+        // shipstate : $("#csstate").val(),
+        // shippincode : $("#cspincode").val(),
+        // shipcountry : $("#cscountry").val(),
+        // shipfax : $("#csfax").val(),
+        // shipphone : $("#csphone").val(),
+        csrfmiddlewaretoken: '{{ csrf_token }}'
+        
+      },
+    
+      success: function(response) {
+        document.getElementById("modalCustomer").reset();
+        reloadCustomer();
+      },
+  });        
+});
+
+function reloadCustomer() {
+
+  $.ajax({
+    url: "{% url 'customer_dropdown' %}",
+    type: "GET",
+    dataType: "json",
+    data: $(this).serialize(),
+    csrfmiddlewaretoken: '{{ csrf_token }}',
+
+    success: function(data) {
+      var dropdown = $('#customer');
+      dropdown.empty();
+      $.each(data, function(key, value) {
+          dropdown.append($('<option></option>').attr('value', key).text(value[1]).val(value[0] + ' ' + value[1]));
       });
     },
     error: function(xhr, status, error) {
@@ -3052,6 +3176,7 @@ $(document).on("change", "#customer", function(){
         },
     
       success: function(response) {
+        // console.log(response.state)
         $("#cust_state").val(response.state);
 
       },
@@ -3259,11 +3384,12 @@ $(document).ready(function() {
   $(document).on("click", ".selecttax",function(){
 
       var n = $(this).attr('id').slice(9);
-      console.log($("#cust_state").val())
-      // console.log($("#company_state").val())
+      // console.log($("#cust_state").val().split(' ')[1]);
+      // console.log($("#company_state").val());
+      // console.log($("#cust_state").val().split(' ')[1] == $("#company_state").val());
 
       if(n){
-        if($("#cust_state").val() == $("#company_state").val()){
+        if($("#cust_state").val().split(' ')[1] == $("#company_state").val()){
 
           $("#selecttax" + n).removeClass('d-flex');
           $("#selecttax" + n).addClass('d-none');
@@ -3289,7 +3415,7 @@ $(document).ready(function() {
 
       else{
 
-        if($("#cust_state").val() == $("#company_state").val()){
+        if($("#cust_state").val().split(' ')[1] == $("#company_state").val()){
           console.log("gst")
           $("#selecttax").removeClass('d-flex');
           $("#selecttax").addClass('d-none');
@@ -3319,7 +3445,7 @@ $(document).ready(function() {
 
       // SGST- CGST
 
-      if($("#cust_state").val() == $("#company_state").val()){
+      if($("#cust_state").val().split(' ')[1] == $("#company_state").val()){
 
         $("#cgst1").removeClass('d-none');
         $("#cgst1").addClass('d-flex');
@@ -3386,7 +3512,7 @@ $(document).ready(function() {
     // SGST- CGST
       $("#tax1"+n).change(function(){
 
-        if($("#cust_state").val() == $("#company_state").val()){
+        if($("#cust_state").val().split(' ')[1] == $("#company_state").val()){
 
           $("#cgst1").removeClass('d-none');
           $("#cgst1").addClass('d-flex');

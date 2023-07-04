@@ -286,14 +286,17 @@
                     <ol>
                         {% for b in recur_bills %}
                         <li class="p-2 m-4 text-capitalize" id="link_details">
-                            <a href="{% url 'view_recurring_bills' b.id %}"> {{b.profile_name}} </a> <br>
-
-                            <div class="px-5 mt-1 mx-2input-group ">
-                                <label style="color: rgba(103, 97, 97); font-size: 15px;">{{ b.start_date }} </label>
+                            
+                            <div class="px-0 mt-1 mx-1 input-group ">
+                                <a href="{% url 'view_recurring_bills' b.id %}" class="mx-3 stretched-link"> {{b.profile_name}} </a>
                                 <label style="color: rgba(103, 97, 97); font-size: 15px;">₹ {{ b.grand_total|floatformat:2 }} </label>
+                                <br>
+                                <label style="color: rgba(103, 97, 97); font-size: 15px;" class="mx-4"># {{ b.id }} </label>
+                                <span  style="color: rgba(103, 97, 97);">|</span>
+                                <label style="color: rgba(103, 97, 97); font-size: 15px; "class="mx-2"> {{ b.start_date }} </label>
                             </div>
 
-                        </li>
+                        </li><hr>
                         {% endfor %}
 
                     </ol>
