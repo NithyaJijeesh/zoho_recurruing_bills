@@ -112,9 +112,15 @@
             {% endfor %}
           </select>
           <a href="" data-toggle="modal" data-target="#newvendor">+ Add New Vendor</a>
+
+          {% for v in vendor %}
+          <br>
+          <a href="" data-toggle="modal" data-target="#newvendor" id="addid" onclick="clickid('{{v.id}}')">Add </a>
+
+          {% endfor %}
         </div>
       </div>
-
+      
       <div class="row mt-2 d-none" id="email_row">
         <div class="col-md-3">
           <label for="email_inp">Vendor Email</label>
@@ -656,6 +662,7 @@
                 <div class="row">
                   <div class="col-md-3 mt-2">
                     <label for="validationCustom01">Title</label>
+                    <input type="text" value="" id="venid">
                   </div>
                   <div class="col-md-3 mt-2">
                     <select name="title" id="title" class="form-control text-dark bg-light">
@@ -2162,6 +2169,11 @@
 
 <script>
 
+function clickid(num) {
+     console.log(num);
+     $("#venid").val(num)
+  }
+
 document.getElementById("cancelButton").addEventListener("click", function() {
   document.getElementById("myForm").reset(); // Reset the form
   location.reload(); // Reload the page
@@ -2196,15 +2208,12 @@ document.getElementById("cancelButton").addEventListener("click", function() {
       });
   });
 
-
-
+ 
 $(document).ready(function() {
     $('#vendor').change(function() {
 
         var name = $("#vendor").val();
-        console.log(name)
         var na = name.split(' ')
-        console.log(na)
         $.ajax({
 
             url: "{% url 'get_vendordet' %}", 
@@ -2219,7 +2228,6 @@ $(document).ready(function() {
             type : 'POST',
 
             success: function(data) {
-              // console.log(data.vendor_email);
                 $("#email_row").removeClass('d-none');
                 $("#email_row").addClass('d-flex');
                 $("#gstin_row").removeClass('d-none');
@@ -2242,7 +2250,6 @@ $(document).ready(function() {
 
         var name = $("#customer").val();
         var na = name.split(' ')
-        // console.log(name)
         $.ajax({
 
             url: "{% url 'get_customerdet' %}", 
@@ -2256,7 +2263,6 @@ $(document).ready(function() {
             type : 'POST',
 
             success: function(data) {
-              // console.log(data.customer_email);
                 $("#cemail_row").removeClass('d-none');
                 $("#cemail_row").addClass('d-flex');
                
@@ -2507,7 +2513,6 @@ $(document).ready(function() {
   $(document).on('click','.clone_row',function(){
       var row_id = $(this);
       var clickedRow = row_id.parentNode.parentNode;
-      // console.log(clickedRow);
 
     var newRow = clickedRow.cloneNode(true);
 
@@ -2524,7 +2529,6 @@ $(document).ready(function() {
   $(document).ready(function() {
     $("#cfname, #clname").change(function() {
       $("#cdisplayname").text($("#ctitle").val() +" " + $("#cfname").val() + " " + $("#clname").val());
-      // console.log($("#cdisplayname").text())
     });
   });
 
@@ -2532,7 +2536,6 @@ $(document).ready(function() {
   $(document).ready(function() {
     $("#v_gsttype").change(function() {
       var x=$('#v_gsttype').val();
-      // console.log(x)
       if(x=="unregistered Business") 
       {
         $(".gstrow").addClass('d-none');
@@ -2675,7 +2678,6 @@ function reloadVendor() {
       var dropdown = $('#vendor');
       dropdown.empty();
       $.each(data, function(key, value) {
-          // console.log(value)
           dropdown.append($('<option></option>').attr('value', key).text(value[0]+" " +value[1] + ' ' + value[2]).val(value[1] + ' ' + value[2]+ ' ' +value[3]));
       });
     },
@@ -2705,7 +2707,6 @@ $(document).on("click","#customerSave",function(){
   else{
       cust_tax = $('#custtax2').val();
   }
-    console.log(cust_tax);
   $.ajax({
     
     type : 'POST',
@@ -2837,7 +2838,6 @@ function reloadPayment() {
                         <option value="">Due end of the month</option>
                         <option value="recpt">Due on receipt</option>`);
       $.each(data, function(key, value) {
-          console.log(value)
           dropdown.append($('<option></option>').attr('value', key).text(value[0]).val(value[1]));
           drpv.append($('<option></option>').attr('value', key).text(value).val(value));
       });
@@ -2859,19 +2859,8 @@ $(document).on("click","#unitSave",function(){
     url:"{% url 'recurbills_unit' %}",
 
     data:{
-        title : $("#title").val(),
-        name : $("#fname").val(),
-        lastname : $("#lname").val(),
-        company_name : $("#vcompany").val(),
-        display_name : $('#vdisplayname').text(),
-        email : $("#vemail").val(),
-        website :$("#wsite").val(),
-        work_mobile :$("#vw_mobile").val(),
-        pers_mobile :$("#vp_mobile").val(),
-        skype :$("#vskype").val(),
-        desg :$("#v_desg").val(),
-        dpt :$("#v_dpt").val(),
-        
+        unit : $("#unit").val(),
+                
         csrfmiddlewaretoken: '{{ csrf_token }}'
         
       },
@@ -2894,7 +2883,7 @@ function reloadUnit() {
     csrfmiddlewaretoken: '{{ csrf_token }}',
 
     success: function(data) {
-      var dropdown = $('#units');
+      var dropdown = $('#item_units');
       dropdown.empty();
 
       $.each(data, function(key, value) {
@@ -2911,8 +2900,8 @@ function reloadUnit() {
 // item modal
 
 $(document).ready(function() {
+
   $("#item-tax1").click(function() {
-  //  console.log($("#item_units").val().split(' ')[0]);
     $(".inter-intra").removeClass('d-none');
     $(".inter-intra").addClass('d-flex');
   });
@@ -2944,6 +2933,19 @@ $(document).on("click","#itemSave",function(){
     intra = 0;
   }
 
+  // console.log(itemtype)
+  // console.log(inter)
+  // console.log(intra)
+  // console.log($("#item_name").val())
+  // console.log($("#item_units").val())
+  // console.log($("#sell_price").val())
+  // console.log($("#cost_price").val())
+  // console.log($("#sell_acc").val())
+  // console.log($("#cost_acc").val())
+  // console.log($("#sell_desc").val())
+  // console.log($("#cost_desc").val())
+
+
   
   $.ajax({
     
@@ -2968,6 +2970,7 @@ $(document).on("click","#itemSave",function(){
       },
     
       success: function(response) {
+        // console.log(response)
         document.getElementById("modalItem").reset();
         reloadItem();
       },
@@ -2988,6 +2991,7 @@ function reloadItem() {
       dropdown.empty();
 
       $.each(data, function(key, value) {
+        
           dropdown.append($('<option></option>').attr('value', key).text(value[0]).val(value[1]));
       });
 
@@ -3170,13 +3174,12 @@ $(document).on("change", "#customer", function(){
       url: "{% url 'get_cust_state' %}",
       type : 'POST',
       data:{
-          name : $(this).val().slice(1),
+          id : $(this).val().split(" ")[0],
           
           csrfmiddlewaretoken: '{{ csrf_token }}'
         },
     
       success: function(response) {
-        // console.log(response.state)
         $("#cust_state").val(response.state);
 
       },
@@ -3210,7 +3213,6 @@ $(document).ready(function() {
         },
     
       success: function(response) {
-        // console.log(response.rate)
         $("#rate").val(response.rate);
       },
     });
@@ -3221,7 +3223,6 @@ $(document).ready(function() {
   function showRate(id,name) {
     
     var n = id.slice(4);
-    // console.log(n)
     $.ajax({
       url: "{% url 'get_rate' %}",
       type : 'POST',
@@ -3244,7 +3245,6 @@ $(document).ready(function() {
   $(document).on('change','.qty',function(){
 
     var q = $(this).attr('id').slice(4)
-    // console.log(q);
     var rate = 0;
     var qnty = 0;
     var amount = 0;
@@ -3253,7 +3253,6 @@ $(document).ready(function() {
       rate = $("#rate").val();
       qnty = $("#qty1").val();
        amount = rate*qnty;
-      //  console.log(amount);
       $("#amount").val(amount);
     }
     else{
@@ -3316,7 +3315,9 @@ $(document).ready(function() {
   $(document).on('change','.disc',function(){
 
     var d = $(this).attr('id').slice(4)
+    console.log(d)
     if(d){
+      console.log("yes")
       var am = $("#amount" + d).val();
 
       var dis = $("#disc" + d).val();
@@ -3326,6 +3327,7 @@ $(document).ready(function() {
 
     }
     else{
+      console.log("no")
       var am = $("#amount").val();
 
       var dis = $("#disc").val();
@@ -3384,12 +3386,9 @@ $(document).ready(function() {
   $(document).on("click", ".selecttax",function(){
 
       var n = $(this).attr('id').slice(9);
-      // console.log($("#cust_state").val().split(' ')[1]);
-      // console.log($("#company_state").val());
-      // console.log($("#cust_state").val().split(' ')[1] == $("#company_state").val());
 
       if(n){
-        if($("#cust_state").val().split(' ')[1] == $("#company_state").val()){
+        if($("#cust_state").val() == $("#company_state").val()){
 
           $("#selecttax" + n).removeClass('d-flex');
           $("#selecttax" + n).addClass('d-none');
@@ -3415,8 +3414,8 @@ $(document).ready(function() {
 
       else{
 
-        if($("#cust_state").val().split(' ')[1] == $("#company_state").val()){
-          console.log("gst")
+        if($("#cust_state").val() == $("#company_state").val()){
+          // console.log("gst")
           $("#selecttax").removeClass('d-flex');
           $("#selecttax").addClass('d-none');
           $("#tax1").removeClass('d-none');
@@ -3427,7 +3426,7 @@ $(document).ready(function() {
 
         }
         else{
-          console.log("igst")
+          // console.log("igst")
           $("#selecttax").removeClass('d-flex');
           $("#selecttax").addClass('d-none');
           $("#tax1").removeClass('d-none');
@@ -3445,7 +3444,7 @@ $(document).ready(function() {
 
       // SGST- CGST
 
-      if($("#cust_state").val().split(' ')[1] == $("#company_state").val()){
+      if($("#cust_state").val() == $("#company_state").val()){
 
         $("#cgst1").removeClass('d-none');
         $("#cgst1").addClass('d-flex');
@@ -3480,7 +3479,7 @@ $(document).ready(function() {
 
         var tot_tax = amnt * (tax/100);
         $("#tax_total0").val(tot_tax);
-        console.log("igst tax" + tot_tax)
+        // console.log("igst tax" + tot_tax)
 
       }
 
@@ -3492,7 +3491,7 @@ $(document).ready(function() {
       }
 
       var gst = tax_t/2;
-      console.log(gst);
+      // console.log(gst);
       $("#igst").val(tax_t);
       $("#cgst").val(gst);
       $("#sgst").val(gst);
@@ -3512,7 +3511,7 @@ $(document).ready(function() {
     // SGST- CGST
       $("#tax1"+n).change(function(){
 
-        if($("#cust_state").val().split(' ')[1] == $("#company_state").val()){
+        if($("#cust_state").val() == $("#company_state").val()){
 
           $("#cgst1").removeClass('d-none');
           $("#cgst1").addClass('d-flex');
@@ -3554,7 +3553,6 @@ $(document).ready(function() {
 
         var tax_t = 0;
         c = $(".tax1").length;
-        console.log(c)
         for(var i = 0; i <= c - 1 ; i++){
           tax_t += parseFloat(  $("#tax_total" + i).val());
         }
@@ -3585,7 +3583,6 @@ $(document).ready(function() {
   });
 
   $(document).on("change", "#add_round_off", function(){
-    console.log($("#add_round_off").val())
     var round = parseFloat($("#grandtotal").val()) + parseFloat($("#add_round_off").val()) 
     $("#grandtotal").val(round);
   });
@@ -3625,7 +3622,6 @@ $(document).ready(function() {
 
 
   $(document).on("click",'#save',function(){
-    console.log("clicked")
 
     var input1 = document.getElementById("disc");
     if (input1.value === "") {

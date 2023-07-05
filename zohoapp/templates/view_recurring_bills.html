@@ -282,24 +282,20 @@
                 </div>
                 <div class="border-bottom"></div>
 
-                <div class="row mt-1">
-                    <ol>
-                        {% for b in recur_bills %}
-                        <li class="p-2 m-4 text-capitalize" id="link_details">
-                            
-                            <div class="px-0 mt-1 mx-1 input-group ">
-                                <a href="{% url 'view_recurring_bills' b.id %}" class="mx-3 stretched-link"> {{b.profile_name}} </a>
-                                <label style="color: rgba(103, 97, 97); font-size: 15px;">₹ {{ b.grand_total|floatformat:2 }} </label>
-                                <br>
-                                <label style="color: rgba(103, 97, 97); font-size: 15px;" class="mx-4"># {{ b.id }} </label>
-                                <span  style="color: rgba(103, 97, 97);">|</span>
-                                <label style="color: rgba(103, 97, 97); font-size: 15px; "class="mx-2"> {{ b.start_date }} </label>
+                <div class="row mt-5">
+                    {% for b in recur_bills %}
+                        <a href="{% url 'view_recurring_bills' b.id %}" class="my-3">
+                            <div class="px-0 my-2 mx-1 input-group ">
+                                <label style="color: azure; font-size: 18px;" class="mx-3 text-capitalize">{{b.profile_name}} </label>
+                                <label style="color: rgb(129, 126, 126); font-size: 15px;">₹ {{ b.grand_total|floatformat:2 }} </label>
                             </div>
-
-                        </li><hr>
-                        {% endfor %}
-
-                    </ol>
+                            <div class="px-3 my-4 mx-1 input-group ">
+                                <label style="color: rgb(129, 126, 126); font-size: 15px;" class="mx-4"># {{ b.id }} </label>
+                                <span  style="color: rgb(129, 126, 126);">|</span>
+                                <label style="color: rgb(129, 126, 126); font-size: 15px; "class="mx-2"> {{ b.start_date }} </label>
+                            </div>
+                        </a><hr>
+                    {% endfor %}
                 </div>
             </div>
         </div>

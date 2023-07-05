@@ -3729,6 +3729,7 @@ def recurbills_pay(request):
         pay.save()
 
         return HttpResponse({"message": "success"})
+    
         
 @login_required(login_url='login')
 def pay_dropdown(request):
@@ -3777,43 +3778,58 @@ def recurbills_item(request):
     company = company_details.objects.get(user = request.user)
 
     if request.method=='POST':
-        type=request.POST.get('type')
-        name=request.POST['name']
-        ut=request.POST['unit']
+
         inter=request.POST['inter']
         intra=request.POST['intra']
+        type=request.POST.get('type')
+        name=request.POST['name']
+        unit=request.POST['unit']
+        sel_price=request.POST.get('sel_price')
+        sel_acc=request.POST.get('sel_acc')
+        s_desc=request.POST.get('sel_desc')
+        cost_price=request.POST.get('cost_price')
+        cost_acc=request.POST.get('cost_acc')      
+        p_desc=request.POST.get('cost_desc')
+        u=request.user.id
+        us=request.user
+        history="Created by" + str(us)
+        user=User.objects.get(id=u)
+        unit=Unit.objects.get(id=unit)
+        sel=Sales.objects.get(id=sel_acc)
+        cost=Purchase.objects.get(id=cost_acc)
+        ad_item=AddItem(type=type,Name=name,p_desc=p_desc,s_desc=s_desc,s_price=sel_price,p_price=cost_price,unit=unit,
+                    sales=sel,purchase=cost,user=user,creat=history,interstate=inter,intrastate=intra
+                        )
+        
+        type=request.POST.get('type')
+        name=request.POST.get('name')
+        ut=request.POST.get('unit')
+        units=Unit.objects.get(id=ut)
+        inter=request.POST.get('inter')
+        intra=request.POST.get('intra')
         sell_price=request.POST.get('sell_price')
         sell_acc=request.POST.get('sell_acc')
+        sel=Sales.objects.get(id=sell_acc)
         sell_desc=request.POST.get('sell_desc')
         cost_price=request.POST.get('cost_price')
         cost_acc=request.POST.get('cost_acc')      
+        cost=Purchase.objects.get(id=cost_acc)
         cost_desc=request.POST.get('cost_desc')
 
         history="Created by " + str(request.user)
+
         user = User.objects.get(id = request.user.id)
 
         item=AddItem(type=type,Name=name,p_desc=cost_desc,s_desc=sell_desc,s_price=sell_price,p_price=cost_price,
-                    user=user,creat=history,interstate=inter,intrastate=intra)
+                     user=user,creat=history,interstate=inter,intrastate=intra,unit = units, sales = sel, purchase = cost)
 
         item.save()
 
-        it = AddItem.objects.get(id  = item.id)
-
-        if ut :
-            units=Unit.objects.get(id=ut)
-            it.unit = units
-            it.save()
-        if sell_acc:
-            sel=Sales.objects.get(id=sell_acc)
-            it.sales = sel
-            it.save()
-        if cost_acc:
-            cost=Purchase.objects.get(id=cost_acc)
-            it.purchase = cost
-            it.save()
-
         return HttpResponse({"message": "success"})
+    
+    
         
+
 @login_required(login_url='login')
 def item_dropdown(request):
 
@@ -3862,7 +3878,7 @@ def get_rate(request):
     if request.method=='POST':
         id=request.POST.get('id')
 
-        item = AddItem. objects.get( id = id, user = user)
+        item = AddItem.objects.get( id = id, user = user)
          
         rate = 0 if item.p_price == "" else item.p_price
 
@@ -3873,13 +3889,11 @@ def get_cust_state(request):
 
     user = User.objects.get(id=request.user.id)
     if request.method=='POST':
-        # print(request.POST.get('name'))
 
-        name=request.POST.get('name').strip()
-
-        cust = customer.objects.get(customerName = name, user = user)
-         
-        state = 'Not Specified' if cust.placeofsupply == "" else cust.placeofsupply
+        id=request.POST.get('id')
+        cust = customer.objects.get(id = id, user = user)
+        cstate = cust.placeofsupply.split("] ")[1]
+        state = 'Not Specified' if cstate == "" else cstate
 
         return JsonResponse({"state": state},safe=False)
     

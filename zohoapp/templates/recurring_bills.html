@@ -197,7 +197,7 @@
                                     <td><a href="{% url 'view_recurring_bills' r.id %}"> {{ r.profile_name }}</a></td>
                                     <td class="text-capitalize"><a href="{% url 'view_recurring_bills' r.id %}">{{ r.vendor_name }}</a></td>
                                     <td class="text-capitalize"><a href="{% url 'view_recurring_bills' r.id %}">{{ r.customer_name }}</a></td>
-                                    <td><a href="{% url 'view_recurring_bills' r.id %}">{{ r.grand_total|floatformat:3 }}</a></td>
+                                    <td><a href="{% url 'view_recurring_bills' r.id %}">{{ r.grand_total|floatformat:2 }}</a></td>
                                     <td class="text-right">
                                         <a href="{% url 'delete_recurring_bills' r.id %}" 
                                         data-toggle="tooltip" data-placement="top" title="Delete Recurring Expense">
