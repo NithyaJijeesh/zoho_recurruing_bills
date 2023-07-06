@@ -112,15 +112,9 @@
             {% endfor %}
           </select>
           <a href="" data-toggle="modal" data-target="#newvendor">+ Add New Vendor</a>
-
-          {% for v in vendor %}
-          <br>
-          <a href="" data-toggle="modal" data-target="#newvendor" id="addid" onclick="clickid('{{v.id}}')">Add </a>
-
-          {% endfor %}
         </div>
       </div>
-      
+
       <div class="row mt-2 d-none" id="email_row">
         <div class="col-md-3">
           <label for="email_inp">Vendor Email</label>
@@ -662,7 +656,6 @@
                 <div class="row">
                   <div class="col-md-3 mt-2">
                     <label for="validationCustom01">Title</label>
-                    <input type="text" value="" id="venid">
                   </div>
                   <div class="col-md-3 mt-2">
                     <select name="title" id="title" class="form-control text-dark bg-light">
@@ -1140,7 +1133,6 @@
                     </div>
                 </div>
                 <div class="row">
-                  <div class="col-md-4"></div>
                   <div class="col-md-4">
                     <div class="d-flex">
                       <button class="btn save_btn rounded-pill text-grey w-50 my-4 mx-3"
@@ -1153,7 +1145,8 @@
                       </button>
                     </div>
                   </div>
-                  <div class="col-md-4"></div>
+                  <div class="col-md-6"></div>
+                  <!-- <div class="col-md-4"></div> -->
                 </div>
               </form>
                   </div>
@@ -1542,8 +1535,8 @@
                 <div class="row mt-2 m-0 p-0 mb-2">
                   <div class="col-md-9"> </div>
                   <div class="col-md-3 text-right  m-0 p-0">
-                    <input type="checkbox" onclick="addressSame()" id="cokay" name="cokay">
-                    <label for="vokay" style="color: #909091;">Same As Billing Address</label>
+                    <input type="checkbox" onclick="addressSame()" id="csokay" name="csokay">
+                    <label for="csokay" style="color: #909091;">Same As Billing Address</label>
                   </div>
                 </div>
 
@@ -1821,15 +1814,14 @@
       <div class="modal-dialog modal-xl">
         <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
           <div class="modal-header " style="background: rgb(32, 35, 37);">
-              <h3 class="m-3 text-uppercase">New Item</h3>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-              </button>
+            <h3 class="m-3 text-uppercase">New Item</h3>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
           </div>
           <div class="modal-body" style="background: rgb(32, 35, 37);">
             <div class="card p-3 m-3">
               <form action="" method="post" class="needs-validation" novalidate autocomplete="off" id="modalItem">
-
                 <div class="row mt-2">
                   <div class="col-md-4 mr-0">
                     <label class="col-form-label col-sm-2 p-0">Type <i class="fa fa-question-circle"></i></label>
@@ -1910,7 +1902,7 @@
                   </div>
                   <div class="col-md-3">
                     <select name="inter" class="form-control text-dark bg-light" id="inter">
-                      <option value="">Select GST</option>
+                      <option value="">Select IGST</option>
 
                       <option value="IGST0[0%]">IGST0[0%]</option>
                       <option value="IGST5[5%]">IGST5[5%]</option>
@@ -2025,12 +2017,12 @@
                       <div class="invalid-feedback text-warning" >You must agree before submitting.</div>
                     </div>
                 </div>
-                <div class="row">
-                  <div class="col-md-4"></div>
-                  <div class="col-md-4">
+                <div class="row ">
+                  <div class="col-md-5"></div>
+                  <div class="col-md-3">
                     <div class="d-flex">
                       <button class="btn save_btn rounded-pill text-grey w-50 my-4 mx-3"
-                      type="submit" data-dismiss="modal" id="itemSave">Submit
+                          type="submit" data-dismiss="modal" id="itemSave">Submit
                       </button> 
 
                       <button type="button" class="close btn save_btn rounded-pill text-grey w-50 my-4" 
@@ -2042,8 +2034,8 @@
                   <div class="col-md-4"></div>
                 </div>
               </form>
-                  </div>
-              </div>
+            </div>
+          </div>
           </div>
       </div>  
     </div>  
@@ -2169,11 +2161,6 @@
 
 <script>
 
-function clickid(num) {
-     console.log(num);
-     $("#venid").val(num)
-  }
-
 document.getElementById("cancelButton").addEventListener("click", function() {
   document.getElementById("myForm").reset(); // Reset the form
   location.reload(); // Reload the page
@@ -2208,10 +2195,10 @@ document.getElementById("cancelButton").addEventListener("click", function() {
       });
   });
 
- 
+
+  
 $(document).ready(function() {
     $('#vendor').change(function() {
-
         var name = $("#vendor").val();
         var na = name.split(' ')
         $.ajax({
@@ -2590,9 +2577,11 @@ $(document).ready(function() {
     });
 
   function addressSame(){
-    var chkbtn = document.getElementById('vokay');
-    if (chkbtn.checked == true) {
-      document.getElementById('vsstreet').value = document.getElementById('vstreet').value;
+    var chkbtn1 = document.getElementById('vokay');
+    var chkbtn2 = document.getElementById('csokay');
+    if (chkbtn1.checked == true) {
+      document.getElementById('vsstreet1').value = document.getElementById('vstreet1').value;
+      document.getElementById('vsstreet2').value = document.getElementById('vstreet2').value;
       document.getElementById('vscity').value = document.getElementById('vcity').value;
       document.getElementById('vspincode').value = document.getElementById('vpincode').value;
       document.getElementById('vscountry').value = document.getElementById('vcountry').value;
@@ -2608,6 +2597,25 @@ $(document).ready(function() {
       document.getElementById('vscountry').value = '';
       document.getElementById('vsphone').value = '';
       document.getElementById('vsfax').value = '';
+    }
+    if (chkbtn2.checked == true) {
+      document.getElementById('csstreet1').value = document.getElementById('cstreet1').value;
+      document.getElementById('csstreet2').value = document.getElementById('cstreet2').value;
+      document.getElementById('cscity').value = document.getElementById('ccity').value;
+      document.getElementById('cspincode').value = document.getElementById('cpincode').value;
+      document.getElementById('cscountry').value = document.getElementById('ccountry').value;
+      document.getElementById('csstate').value = document.getElementById('cstate').value;
+      document.getElementById('csphone').value = document.getElementById('cphone').value;
+      document.getElementById('csfax').value = document.getElementById('cfax').value;
+    } 
+    else {
+      document.getElementById('csstreet').value = '';
+      document.getElementById('cscity').value = '';
+      document.getElementById('csstate').value = '';
+      document.getElementById('cspincode').value = '';
+      document.getElementById('cscountry').value = '';
+      document.getElementById('csphone').value = '';
+      document.getElementById('csfax').value = '';
     }
   }
 
@@ -2925,27 +2933,13 @@ $(document).on("click","#itemSave",function(){
   }
 
   if ($('input[name="radioOption1"]:checked').val() == 'Taxable'){
-      inter = $('#inter').val();
-      intra = $('#intra').val();
+      inter_st = $('#inter').val();
+      intra_st = $('#intra').val();
     }
   else{
-    inter = 0;
-    intra = 0;
+    inter_st = 0;
+    intra_st = 0;
   }
-
-  // console.log(itemtype)
-  // console.log(inter)
-  // console.log(intra)
-  // console.log($("#item_name").val())
-  // console.log($("#item_units").val())
-  // console.log($("#sell_price").val())
-  // console.log($("#cost_price").val())
-  // console.log($("#sell_acc").val())
-  // console.log($("#cost_acc").val())
-  // console.log($("#sell_desc").val())
-  // console.log($("#cost_desc").val())
-
-
   
   $.ajax({
     
@@ -2956,8 +2950,8 @@ $(document).on("click","#itemSave",function(){
         type : itemtype,
         name : $("#item_name").val(),
         unit : $("#item_units").val(),
-        inter : inter,
-        intra : intra,
+        inter : inter_st,
+        intra : intra_st,
         sell_price : $("#sell_price").val(),
         cost_price : $("#cost_price").val(),
         sell_acc : $("#sell_acc").val(),
@@ -3578,9 +3572,9 @@ $(document).ready(function() {
 
   });
 
-  $(document).on("change", "#addcharge", function(){
-      $("#addcharge").val($("#addcharge").val());
-  });
+  // $(document).on("change", "#addcharge", function(){
+  //     $("#addcharge").val($("#addcharge").val());
+  // });
 
   $(document).on("change", "#add_round_off", function(){
     var round = parseFloat($("#grandtotal").val()) + parseFloat($("#add_round_off").val()) 
