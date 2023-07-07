@@ -3567,14 +3567,17 @@ def get_customerdet(request):
     company= company_details.objects.get(user = request.user)
 
     name = request.POST.get('name')
+    id = request.POST.get('id')
     # print(name)
 
-    vdr = customer.objects.get(user=company.user_id,customerName=name.strip())
-    email = vdr.customerEmail
+    cust = customer.objects.get(user=company.user_id,id = id, customerName=name.strip())
+    email = cust.customerEmail
     gstin = 0
-    gsttr = vdr.GSTTreatment
+    gsttr = cust.GSTTreatment
+    cstate = cust.placeofsupply.split("] ")[1:]
+    state = 'Not Specified' if cstate == "" else cstate
 
-    return JsonResponse({'customer_email' :email, 'gst_treatment':gsttr, 'gstin': gstin},safe=False)
+    return JsonResponse({'customer_email' :email, 'gst_treatment':gsttr, 'gstin': gstin , 'state' : state},safe=False)
 
 @login_required(login_url='login')
 def recurbills_vendor(request):
@@ -3859,7 +3862,7 @@ def get_rate(request):
 
         item = AddItem.objects.get( id = id, user = user)
          
-        rate = 0 if item.p_price == "" else item.p_price
+        rate = 0 if item.s_price == "" else item.s_price
 
         return JsonResponse({"rate": rate},safe=False)
     
