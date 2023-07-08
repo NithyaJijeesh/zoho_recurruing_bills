@@ -3143,6 +3143,8 @@ def add_recurring_bills(request):
 def create_recurring_bills(request):
 
     company = company_details.objects.get(user = request.user)
+    cust = customer.objects.get(id=request.POST.get('customer').split(" ")[0],user = request.user)
+
     if request.method == 'POST':
         vname = request.POST.get('vendor').rsplit(' ', 1)
         cname = request.POST.get('customer').split(" ")[1:]
@@ -3154,21 +3156,29 @@ def create_recurring_bills(request):
         end = None if request.POST.get('end_date') == "" else  request.POST.get('end_date')
         pay_term =request.POST['terms']
         sub_total =request.POST['subtotal']
-        sgst=request.POST['sgst']
-        cgst=request.POST['cgst']
-        igst=request.POST['igst']
-        tax = request.POST['igst']
-        # print(request.POST['addcharge'])
+        sgst=request.POST.get('sgst')
+        cgst=request.POST.get('cgst')
+        igst= request.POST.get('igst')
+
+        if cust.state == company.state:
+            print('gst')
+            tax1 = request.POST.get('sgst') + request.POST.get('cgst')
+        else:
+            print('igst')
+            tax1 = request.POST.get('igst')
+           
+        print(tax1)
+
         shipping_charge=0 if request.POST['addcharge'] == "" else request.POST['addcharge']
         grand_total=request.POST['grand_total']
-        note=request.POST['note']
+        note=request.POST.get('note')
 
         u = User.objects.get(id = request.user.id)
 
         bills = recurring_bills(vendor_name=vname[0],profile_name=prof,customer_name = cname,
                     source_supply=src_supply,repeat_every = repeat,start_date = start,end_date = end,
                     payment_terms =pay_term,sub_total=sub_total,sgst=sgst,cgst=cgst,igst=igst,
-                    tax_amount=tax,shipping_charge = shipping_charge,
+                    tax_amount=tax1, shipping_charge = shipping_charge,
                     grand_total=grand_total,note=note,company=company,user = u,  )
         bills.save()
 

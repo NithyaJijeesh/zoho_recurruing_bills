@@ -504,7 +504,7 @@
                   <input type="hidden" id="tax_total0" class="form-control mb-2 d-none">
                   <input type="text" placeholder="Select TAX" class="form-control selecttax text-dark bg-light" id="selecttax0">
                   <select name="tax[]" id="intra_tax0" class="form-control tax1 d-none mb-2 text-dark bg-light">
-                    <option id="ta1" value=0 text={{ company.state }} disabled>Choose GST</option>
+                    <option id="ta1" value=0 text=' '>Choose GST</option>
                     <option value=28 text={{ cmp1.state }}>28.0% GST(28%)</option>
                     <option value=18 text={{ cmp1.state }}>18.0% GST(18%)</option>
                     <option value=12 text={{ cmp1.state }}>12.0% GST(12%)</option>
@@ -514,7 +514,7 @@
                   </select>
 
                   <select name="tax[]" id="inter_tax0" class="form-control tax2 d-none mb-2 text-dark bg-light">
-                    <option id="ta5" value=0 text=" " disabled>Choose IGST</option>
+                    <option id="ta5" value=0 text=" "  >Choose IGST</option>
                     <option value=28 text=" ">28.0% IGST(28%)</option>
                     <option value=18 text=" ">18.0% IGST(18%)</option>
                     <option value=12 text=" ">12.0% IGST(12%)</option>
@@ -2470,7 +2470,7 @@ $(document).ready(function() {
             <input type="hidden" id="tax_total0" class="form-control mb-2 d-none">
             <input type="text" placeholder="Select TAX" class="form-control selecttax text-dark bg-light" id="selecttax${roinc}">
             <select name="tax[]" id="intra_tax${roinc}" class="form-control tax1 d-none mb-2 text-dark bg-light">
-                <option id="ta1" value=0 text={{ company.state }} disabled>Choose GST</option>
+                <option id="ta1" value=0 text=" ">Choose GST</option>
                 <option value=28 text={{ cmp1.state }}>28.0% GST(28%)</option>
                 <option value=18 text={{ cmp1.state }}>18.0% GST(18%)</option>
                 <option value=12 text={{ cmp1.state }}>12.0% GST(12%)</option>
@@ -2480,7 +2480,7 @@ $(document).ready(function() {
             </select>
 
             <select name="tax[]" id="inter_tax${roinc}" class="form-control tax2 d-none mb-2 text-dark bg-light">
-              <option id="ta5" value=0 text=" " disabled>Choose IGST</option>
+              <option id="ta5" value=0 text=" " >Choose IGST</option>
               <option value=28 text=" ">28.0% IGST(28%)</option>
               <option value=18 text=" ">18.0% IGST(18%)</option>
               <option value=12 text=" ">12.0% IGST(12%)</option>
@@ -3206,18 +3206,24 @@ $(document).ready(function() {
         $("#rate0").val(response.rate);
 
         var qnty = $("#qty0").val();
+        // console.log(qnty);
         var amount = response.rate*qnty;
         var disc = $("#disc0").val();
-
+        // console.log(amount);
         if(disc){
-          amount_disc = amount*(disc/100)
+          amount_disc = amount*(disc/100);
+          // console.log(amount_disc);
           $("#amount0").val(amount_disc);
+          $("#subtotal").val(amount_disc);
+          $("#grandtotal").val(amount_disc);
         }
         else{
           
           $("#amount0").val(amount);
+          // console.log(amount);
+          $("#subtotal").val(amount);
+          $("#grandtotal").val(amount);
         }
-          
       },
     });
   });
@@ -3245,10 +3251,12 @@ $(document).ready(function() {
         if(disc){
           amount_disc = amount*(disc/100)
           $("#amount" +n).val(amount_disc);
+          $("#subtotal").val(amount_disc);
         }
         else{
           
           $("#amount" +n).val(amount);
+          $("#subtotal").val(amount);
         }
       },
     });
@@ -3282,10 +3290,69 @@ $(document).ready(function() {
 
       var q = $(this).attr('id').slice(3)
     
-      rate = $("#rate"+q).val();
-      qnty = $("#qty" +q).val();
-      amount = rate*qnty;
-      $("#amount" +q).val(amount);
+      var rate = $("#rate"+q).val();
+      var qnty = $("#qty" +q).val();
+      var amount = rate*qnty;
+      var disc = $("#disc" + q).val();
+
+      var tax1 = $("#intra_tax" +q).val();
+      var tax2 = $("#inter_tax" +q).val();
+
+      var ship = parseFloat($("#addcharge").val());
+      // console.log($("#addcharge").val());
+
+      if (tax1 == 0){
+        if(tax2 == 0){
+          tax = 0
+        }
+        else{
+          tax = amount-(amount*(tax2/100));
+          $("#igst").val(tax);
+          $("#sgst").val(0);
+          $("#cgst").val(0);
+        }
+      }
+      else{
+          tax = amount-(amount*(tax1/100));
+          $("#sgst").val(tax/2);
+          $("#cgst").val(tax/2);
+          $("#igst").val(0);
+      }
+      if(ship){
+        // console.log('yea');
+        if (disc){
+          amount_disc =  amount - (amount*(disc/100));
+          $("#amount" +q).val(amount_disc);
+          $("#subtotal").val(amount_disc);
+          
+          $("#grandtotal").val(amount_disc+tax+ship);
+        }
+
+        else{
+          $("#amount" +q).val(amount);
+          $("#subtotal").val(amount);
+          $("#grandtotal").val(amount+tax);
+          $("#grandtotal").val(amount+tax+ship);
+        }
+      }
+      else{
+
+        if (disc){
+          amount_disc =  amount - (amount*(disc/100));
+          $("#amount" +q).val(amount_disc);
+          $("#subtotal").val(amount_disc);
+          
+          $("#grandtotal").val(amount_disc+tax);
+        }
+
+        else{
+          $("#amount" +q).val(amount);
+          $("#subtotal").val(amount);
+          $("#grandtotal").val(amount+tax);
+        }
+        
+
+      }
     });
   
 
@@ -3293,18 +3360,61 @@ $(document).ready(function() {
 
       var q = $(this).attr('id').slice(4)
 
-      rate = $("#rate"+q).val();
-      qnty = $("#qty" +q).val();
-      t = rate*qnty;
-      amount = t*($("#disc" + q).val()/100)
+      var rate = $("#rate"+q).val();
+      var qnty = $("#qty" +q).val();
+      var t = rate*qnty;
+
+      var amount =t-(t*($("#disc" + q).val()/100));
+
       $("#amount" +q).val(amount);
+      $("#subtotal").val(amount);
+
+      var tax1 = $("#intra_tax" +q).val();
+      var tax2 = $("#inter_tax" +q).val();
+
+      var ship = parseFloat($("#addcharge").val());
+      if(ship){
+        if (tax1 == 0){
+          if(tax2 == 0){
+            tax = 0
+          }
+          else{
+            tax = t-(t*($("#inter_tax" +q).val()/100));
+          }
+        }
+        else{
+          console.log('gst');
+            tax = t-(t*($("#intra_tax" +q).val()/100));
+            console.log(tax);
+        }
+
+        $("#grandtotal").val(amount+tax+ship);
+      }
+
+      else{
+        if (tax1 == 0){
+          if(tax2 == 0){
+            tax = 0
+          }
+          else{
+            tax = t-(t*($("#inter_tax" +q).val()/100));
+          }
+        }
+        else{
+          console.log('gst');
+            tax = t-(t*($("#intra_tax" +q).val()/100));
+            console.log(tax);
+        }
+
+        $("#grandtotal").val(amount+tax);
+      }
+
     });
 
 
     $(document).on("change",".tax1",function(){
 
-      var n = $(this).attr("id").slice(9)
-      console.log(n)
+      var n = $(this).attr("id").slice(9);
       var rate = $("#rate"+n).val();
       var qnty = $("#qty" +n).val();
       var amount = rate*qnty;
@@ -3312,24 +3422,28 @@ $(document).ready(function() {
       var tax = $("#intra_tax"+n).val();
 
       if(disc){
-        amount_disc = amount*(disc/100);
-        var tot_tax = amount_disc - (amount_disc * (tax/100));
-        console.log(tot_tax);
-        // $("#amount" +n).val(tot_tax);
+        amount_disc = amount - (amount*(disc/100));
+        var tot_tax = amount - (amount * (tax/100));
+        $("#sgst").val(tot_tax/2);
+        $("#cgst").val(tot_tax/2);
+        $("#igst").val(0);
+        $("#subtotal").val(amount_disc);
+        $("#grandtotal").val(amount_disc+tot_tax);
       }
       else{
         var tot_tax =amount -( amount * (tax/100));
-        console.log(tot_tax);
-
-        
+        $("#sgst").val(tot_tax/2);
+        $("#cgst").val(tot_tax/2);
+        $("#igst").val(0);
+        $("#subtotal").val(amount);
+        $("#grandtotal").val(amount+tot_tax);
       }
 
     });
 
     $(document).on("change",".tax2",function(){
 
-      var n = $(this).attr("id").slice(9)
-      console.log(n)
+      var n = $(this).attr("id").slice(9);
       var rate = $("#rate"+n).val();
       var qnty = $("#qty" +n).val();
       var amount = rate*qnty;
@@ -3337,86 +3451,61 @@ $(document).ready(function() {
       var tax = $("#inter_tax"+n).val();
 
       if(disc){
-        amount_disc = amount*(disc/100);
-        var tot_tax = amount_disc - (amount_disc * (tax/100));
+        amount_disc = amount - (amount*(disc/100));
+        var tot_tax = amount - (amount * (tax/100));
         console.log(tot_tax);
+        $("#igst").val(tot_tax);
+        $("#sgst").val(0);
+        $("#cgst").val(0);
+        $("#subtotal").val(amount_disc);
+        $("#grandtotal").val(amount_disc+tot_tax)
        
       }
       else{
         var tot_tax =amount -( amount * (tax/100));
-        console.log(tot_tax);
-
+        // console.log(tot_tax);
+        $("#igst").val(tot_tax);
+        $("#sgst").val(0);
+        $("#cgst").val(0);
+        $("#subtotal").val(amount);
+        $("#grandtotal").val(amount+tot_tax)
         
       }
 
     });
 
+    $(document).on("change","#addcharge",function(){
+
+      if($("#cust_state").val() == $("#company_state").val()){
+        var total =parseFloat( $("#subtotal").val())+ parseFloat( $("#sgst").val())+ parseFloat($("#cgst").val())+ parseFloat($("#addcharge").val());
+        $("#grandtotal").val(total);
+      }
+      else if($("#cust_state").val() != $("#company_state").val()){
+        var total = parseFloat($("#subtotal").val())+  parseFloat($("#igst").val())+ parseFloat($("#addcharge").val());
+        $("#grandtotal").val(total);
+      }
+      
+
+    });
+
+    $(document).on("change", "#add_round_off", function(){
+      var round = parseFloat($("#grandtotal").val()) + parseFloat($("#add_round_off").val()) 
+      $("#grandtotal").val(round);
+    });
 
 
+  $(document).on("click",'#save',function(){
 
+    var input1 = document.getElementById("disc");
+    if (input1.value === "") {
+      input1.value = 0;
+    }
+    var input2 = document.getElementById("date1");
+    if (input2.value === "") {
+      input2.value = "{% now 'Y-m-d' %}";
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    $(document).on("click", "#grandtotallbl", function(){
-
-if(isNaN(parseFloat($("#addcharge").val())) == false || isNaN(parseFloat($("#igst").val()))== false){
-
-  var grand_total = parseFloat($("#subtotal").val()) + parseFloat($("#igst").val()) + parseFloat($("#addcharge").val());
-  $("#grandtotal").val(grand_total);
-
-}
-else{
-  if(isNaN(parseFloat($("#addcharge").val())) == false ){
-    var grand_total = parseFloat($("#subtotal").val())  + parseFloat($("#addcharge").val());
-    $("#grandtotal").val(grand_total);
-  }
-  if(isNaN(parseFloat($("#igst").val()))== false){
-    var grand_total = parseFloat($("#subtotal").val()) + parseFloat($("#igst").val());
-    $("#grandtotal").val(grand_total);
-
-  }
-  else{
-    var grand_total = parseFloat($("#subtotal").val()) ;
-    $("#grandtotal").val(grand_total);
-  }
-}
-});
-
-
-$(document).on("click",'#save',function(){
-
-var input1 = document.getElementById("disc");
-if (input1.value === "") {
-  input1.value = 0;
-}
-var input2 = document.getElementById("date1");
-if (input2.value === "") {
-  input2.value = "{% now 'Y-m-d' %}";
-}
-
-});
+  });
 </script>
 
 {% endblock %}

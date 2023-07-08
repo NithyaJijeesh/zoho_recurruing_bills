@@ -200,12 +200,7 @@
         width: auto;
         overflow-y: auto;
         border: none;
-        box-shadow: inset 2px 2px 5px 2px rgba(0, 0, 0, 0.3),
-              inset -2px -2px 5px 2px rgba(0, 0, 0, 0.3),
-              inset 2px -2px 5px 2px rgba(0, 0, 0, 0.3),
-              inset -2px 2px 5px 2px rgba(0, 0, 0, 0.3);
-
-        /* box-shadow: 5px 2px 5px 2px  grey; */
+        box-shadow: 5px 2px 5px 2px  grey;
     }
 
     @media print {
@@ -242,6 +237,25 @@
     .modal{
       z-index: 9999;
       overflow: scroll;
+    }
+    .print-only p{
+        color: black;
+        font-weight:700;
+        font-family:Georgia, 'Times New Roman', Times, serif
+    }
+    .print-only thead td{
+        color: black;
+        font-weight:700;
+        /* font-family:Georgia, 'Times New Roman', Times, serif; */
+        font-style: italic;
+    }
+    .print-only tbody td {
+        color: black;
+    }
+    .print-only tfoot td{
+        color: black;
+        font-size: 17px;
+
     }
 </style>
 
@@ -356,52 +370,43 @@
             <hr class="hr">
 
 
-            <div id="Template" class=" print-only page tabcontent p-5 m-3" style="display: block; background-color: az;">
+            <div id="Template" class=" print-only page tabcontent p-5 m-3" style="display: block; background-color:azure">
                 <div class="row extra-info pt-2">
                     <div class="col-1 "></div>
                     <div class="col-5 ">
-                        <h5 style="color: black;">{{company.company_name }}</h5>
-                        <p class="address mx-2 p-2" style="color: black;"> {{company.address}}<br>
+                        <h3 class="text-uppercase" style="color: black;"><b>{{company.company_name }}</b></h3>
+                        <p class="address mx-2 p-2"> {{company.address}}<br>
                             {{company.city}} <br>
                             {{company.state}}<br>
                             {{company.pincode}}<br>
-                        </p>                    </div>
+                        </p>                    
+                    </div>
                     <div class="col-6">
-                        <h2 class="text-uppercase">recurring bills</h2>
-                        <section class="top-content bb d-flex justify-content-between">
+                        <h1 class="text-uppercase">recurring bills</h1>
+                        <section class="d-flex justify-content-between">
                             <div class="top-right">
                                 <div class="graphic-path">
                                     <h5 style="color: black;">{{recur_bill.profile_name}}</h5>
                                 </div>
                                 <div class="position-relative">
-                                    <p style="color: black;">Bill No.# <span>{{recur_bill.id }}</span></p>
+                                    <p style="color: black;">Bill No.#  <span>{{recur_bill.id }}</span></p>
                                 </div>
                             </div>
                         </section>
-                    </div>
-                </div>
-                <!-- <div id="ember2512" class="tooltip-container ember-view ribbon text-ellipsis">
-                    <div class="ribbon-inner ribbon-open">{{company.company_name}}</div>
-                </div>
-                <section class="top-content bb d-flex justify-content-between">
-                    <div class="top-left">
-                        <div class="graphic-path">
-                            <h5 style="color: black;">{{recur_bill.profile_name}}</h5>
-                        </div>
-                        <div class="position-relative">
-                            <p style="color: black;">Bill No. <span>{{recur_bill.id }}</span></p>
-                        </div>
-                    </div>
-                </section> -->
 
-                <section class="store-user mt-1">
+                    </div>
+                </div>
+
+
+                <section class="store-user mt-0">
                     <div class="col-12">
-                        <div class="row bb pb-3">
+                        <div class="row pb-3">
+
                             <div class="col-1 "></div>
                             <div class="col-5">
-                                <p style="color: black;">Bill To,</p>
-                                <h5 style="color: black;">{{customer.customerName}}</h5>
-                                <p class="address col-6 mx-2 p-2" style="margin-left: -14px;color: black;"> {{customer.Address1}}
+                                <p style=" font-size: 18px; font-style: italic; font-weight: 700;">Bill To,</p>
+                                <h5  class="mx-2" style="color: black;">{{customer.customerName}}</h5>
+                                <p class="address col-6 mx-3 p-2" style="margin-left: -14px;"> {{customer.Address1}}
                                     <br>
                                     {{customer.Address2}}<br>
                                     {{customer.city}}<br>
@@ -409,11 +414,11 @@
                                 </p>
 
                             </div>
-                            <!-- <div class="col-1"></div> -->
+                            <div class="col-1"></div>
                             <div class="col-5 mt-5">
-                                <p style="color: black; font-weight: 500;">Bill Date : &nbsp <span style="color: black;">{{recur_bill.start_date|date:'d-m-Y'}}</span></p>
-                                <p style="color: black; font-weight: 500;">Due Date : &nbsp <span style="color: black;">{{recur_bill.end_date|date:'d-m-Y'}}</span></p>
-                                <p style="color: black; font-weight: 500;">Term : &nbsp <span style="color: black;">NET {{recur_bill.payment_terms}}</span></p>
+                                <p>Bill Date : &nbsp <span style="color: black;">{{recur_bill.start_date|date:'d-m-Y'}}</span></p>
+                                <p>Due Date : &nbsp <span style="color: black;">{{recur_bill.end_date|date:'d-m-Y'}}</span></p>
+                                <p>Term : &nbsp <span style="color: black;">NET {{recur_bill.payment_terms}}</span></p>
 
                             </div>
                         </div>
@@ -423,7 +428,7 @@
 
                 <section class="product-area mt-0">
                     <table class="table ">
-                        <thead style="background-color: burlywood;">
+                        <thead style="background-color:burlywood; color: black;">
                             <tr>
                                 <td>#</td>
                                 <td>Item</td>
@@ -466,22 +471,28 @@
                                     <td style="font-weight:bold">Sub Total :</td>
                                     <td style="font-weight:bold">{{recur_bill.sub_total|floatformat:2}}</td>
                                 </tr>
-                                {% if recur_bill.IGST != "" %}
+                                {% if recur_bill.igst != "" %}
                                 <tr>
                                     <td style="font-weight:bold">IGST :</td>
                                     <td style="font-weight:bold">{{recur_bill.igst|floatformat:2}}</td>
                                 </tr>
                                 {% endif %}
-                                {% if recur_bill.CGST != "" %}
+                                {% if recur_bill.cgst != "" %}
                                 <tr>
                                     <td style="font-weight:bold">CGST :</td>
                                     <td style="font-weight:bold">{{recur_bill.cgst|floatformat:2}}</td>
                                 </tr>
                                 {% endif %}
-                                {% if recur_bill.SGST != "" %}
+                                {% if recur_bill.sgst != "" %}
                                 <tr>
                                     <td style="font-weight:bold">SGST:</td>
                                     <td style="font-weight:bold">{{recur_bill.sgst|floatformat:2}}</td>
+                                </tr>
+                                {% endif %}
+                                {% if recur_bill.shipping_charge != "" %}
+                                <tr>
+                                    <td style="font-weight:bold">Shipping Charge:</td>
+                                    <td style="font-weight:bold">{{recur_bill.shipping_charge|floatformat:2}}</td>
                                 </tr>
                                 {% endif %}
                                 <tfoot>
