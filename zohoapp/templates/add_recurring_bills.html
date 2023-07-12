@@ -528,7 +528,7 @@
                 </td>
 
                 <td style="width: 11%;">
-                  <input type="text" name='amount[]' id="amount0" placeholder='Amount' class="form-control amount1 text-dark bg-light" step="0.00" min="0"  />
+                  <input type="text" name='amount[]' id="amount0" placeholder='Amount' class="form-control amount text-dark bg-light" step="0.00" min="0"  />
                 </td>
                 <td>
                   <button type="button" id="0" class="btn btn-outline-primary clone_row text-center mb-1 p-1 " data-toggle= "tooltip" data-placement="bottom" tooltip="Clone"
@@ -2536,7 +2536,6 @@ $(document).ready(function() {
     var roinc = table.rows.length;
 
     var row = $(this).closest('#items-table-body tr'); 
-    console.log(row.attr('id'));
     var newRow = row.clone();  
 
     var inputs = row.find('input');
@@ -2546,60 +2545,73 @@ $(document).ready(function() {
     var rt = row.find('.rate');
     var amnt  = row.find('.amount');
     var disc = row.find(".disc");
-    var row_cls = row.find(".addr");
+    var intra = row.find(".tax1");
+    var inter = row.find(".tax2");
 
 
-    row_cls.each(function(index) {
+    newRow.each(function(index) {
         var idPrefix = 'addr';
         var newId = idPrefix + roinc ;
-        newRow.find('.addr').attr('id' , newId);
+        newRow.attr('id' , newId);
         
     });
     item.each(function(index) {
-        var value = $(this).val();
+        var value1 = $(this).val();
         var idPrefix = 'item';
         var newId = idPrefix + roinc ;
-        newRow.find('.item').eq(index).val(value).attr('id' , newId);
+        newRow.find('.item').eq(index).val(value1).attr('id' , newId);
         
     });
     qnty.each(function(index) {
-        var value = $(this).val();
+        var value2 = $(this).val();
         var idPrefix = 'qty';
         var newId = idPrefix + roinc ;
-        // console.log(newId);
-        newRow.find('.qty').eq(index).val(value).attr('id' , newId);
+        newRow.find('.qty').eq(index).val(value2).attr('id' , newId);
         
     });
     rt.each(function(index) {
-        var value = $(this).val();
+        var value3 = $(this).val();
         var idPrefix = 'rate';
         var newId = idPrefix + roinc ;
-        newRow.find('.rate').eq(index).val(value).attr('id' , newId);
+        newRow.find('.rate').eq(index).val(value3).attr('id' , newId);
         
     });
     amnt.each(function(index) {
-        var value = $(this).val();
+        var value4 = $(this).val();
         var idPrefix = 'amount';
         var newId = idPrefix + roinc ;
-        newRow.find('.amount').eq(index).val(value).attr('id' , newId);
+        newRow.find('.amount').eq(index).val(value4).attr('id' , newId);
         
     });
 
     disc.each(function(index) {
-        var value = $(this).val();
+        var value5 = $(this).val();
         var idPrefix = 'disc';
         var newId = idPrefix + roinc ;
-        newRow.find('.disc').eq(index).val(value).attr('id' , newId);
+        newRow.find('.disc').eq(index).val(value5).attr('id' , newId);
         
     });
     accnt.each(function(index) {
-      var value = $(this).val();
+      var value6 = $(this).val();
       var idPrefix = 'account';
       var newId = idPrefix + roinc ;
-      newRow.find('.acnt').eq(index).val(value).attr('id' , newId);
+      newRow.find('.acnt').eq(index).val(value6).attr('id' , newId);
         
     });
 
+    intra.each(function(index){
+      var value7 = $(this).val();
+      var idPrefix = 'intra_tax';
+      var newId = idPrefix + roinc ;
+      newRow.find('.tax1').eq(index).val(value7).attr('id' , newId);
+    });
+    
+    inter.each(function(index){
+      var value8 = $(this).val();
+      var idPrefix = 'inter_tax';
+      var newId = idPrefix + roinc ;
+      newRow.find('.tax2').eq(index).val(value8).attr('id' , newId);
+    });
     var buttonCell = $('<td>').append(`
             <button type="button" id="${roinc}" class="btn btn-outline-primary clone_row text-center mb-1 p-1 " data-toggle= "tooltip" data-placement="bottom" tooltip="Clone"
                 style = "width:25px; height: 25px; border-radius: 90% " >
@@ -2613,11 +2625,70 @@ $(document).ready(function() {
     newRow.find('td:last-child').replaceWith(buttonCell);
 
     row.after(newRow);
-  });
 
+    //recalculate after new row added
+
+    var row_c = $("#items-table-body tr").length;
+    var amount_t = 0;
+    var tax = 0;
+    var tax_tot = 0;
+    var ship = parseFloat( $("#addcharge").val());
+    for(var i=0; i<row_c;i++){
+      amount_t += parseFloat($("#amount"+i).val());
+
+      $("#subtotal").val(amount_t);
+
+      var tax1 = $("#intra_tax" +i).val();
+      var tax2 = $("#inter_tax" +i).val();
+
+      console.log(tax1);
+      console.log(tax2);
+      console.log($("#amount"+i).val());
+
+      if (tax1 == 0){
+        if(tax2 == 0){
+          tax = 0;
+          tax_tot += tax;
+        }
+        else{
+          tax = ($("#amount"+i).val()*(tax2/100));
+          
+          tax_tot += tax;
+          // console.log(tax_tot);
+          $("#igst").val(tax_tot);
+        }
+      }
+      else{
+
+        tax = ($("#amount"+i).val()*(tax1/100));
+        tax_tot += tax;
+        $("#sgst").val(tax_tot/2);
+        $("#cgst").val(tax_tot/2);
+      }
+      if(ship){
+        $("#grandtotal").val(amount_t+tax_tot+ship)
+      }
+      else{
+        $("#grandtotal").val(amount_t+tax_tot)
+      }
+    }
+  });
+  
   $(document).on('click','.remove_row',function(){
+    
     var row_id = $(this).attr("id");
     $('#addr'+row_id+'').remove();
+
+    $('tr[id^="addr"]').each(function(index) {
+        var new_row_id = 'addr' + (index);
+        $(this).attr('id', new_row_id);
+
+        $(this).find('td[id^="item"]').each(function(tdIndex) {
+            var new_td_id = 'item' + (index + 1) + '_' + tdIndex;
+            $(this).attr('id', new_td_id);
+        });
+    });
+
   });
 
   $(document).ready(function() {
@@ -3429,45 +3500,30 @@ $(document).on('change','.disc',function(){
       var tax1 = $("#intra_tax" +i).val();
       var tax2 = $("#inter_tax" +i).val();
 
-
-      if(ship){
-        if (tax1 == 0){
-          if(tax2 == 0){
-            tax = 0;
-            tax_tot1 += tax;
-          
-          }
-          else{
-            tax = amount_disc*($("#inter_tax" +i).val()/100);
-            tax_tot1 += tax;
-          }
-        }
-        else{
-          tax = amount_disc*($("#intra_tax" +i).val()/100);
-          tax_tot1 += tax;
-        }
-
-      $("#grandtotal").val(amount_tot+tax_tot1+ship);
-    }
-
-    else{
       if (tax1 == 0){
         if(tax2 == 0){
           tax = 0;
           tax_tot1 += tax;
         }
         else{
-          tax = amount_disc*($("#inter_tax" +i).val()/100);
+          tax = amount*(tax2/100);
           tax_tot1 += tax;
         }
       }
       else{
-          tax = amount_disc*($("#intra_tax" +i).val()/100);
+          tax = amount*(tax1/100);
           tax_tot1 += tax;
       }
+      console.log(tax)
+      console.log(tax_tot1)
 
-      $("#grandtotal").val(amount_tot+tax_tot1);
-    }
+      if(ship){
+        $("#grandtotal").val(amount_tot+tax_tot1+ship);
+      }
+
+      else{
+         $("#grandtotal").val(amount_tot+tax_tot1);
+      }
   }
 
 });
@@ -3497,16 +3553,31 @@ $(document).on('change','.disc',function(){
 
 
       if(disc){
-      
-        amount_disc = amount - disc;
-        amount_tot1 += amount_disc
-        $("#subtotal").val(amount_tot1);
-        $("#grandtotal").val(amount_tot1+tax_tot3);
+        if(ship){
+          amount_disc = amount - disc;
+          amount_tot1 += amount_disc
+          $("#subtotal").val(amount_tot1);
+          $("#grandtotal").val(amount_tot1+tax_tot3+ship);
+        }
+        else{
+          amount_disc = amount - disc;
+          amount_tot1 += amount_disc
+          $("#subtotal").val(amount_tot1);
+          $("#grandtotal").val(amount_tot1+tax_tot3);
+        }
+        
       }
       else{
-        amount_tot1 += amount; 
-        $("#subtotal").val(amount_tot1);
-        $("#grandtotal").val(amount_tot1+tax_tot3);
+        if(ship){
+          amount_tot1 += amount; 
+          $("#subtotal").val(amount_tot1);
+          $("#grandtotal").val(amount_tot1+tax_tot3+ship);
+        }
+        else{
+          amount_tot1 += amount; 
+          $("#subtotal").val(amount_tot1);
+          $("#grandtotal").val(amount_tot1+tax_tot3);
+        }
       }
     }
 
