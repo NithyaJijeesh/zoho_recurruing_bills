@@ -152,16 +152,7 @@ def edit_profile(request,pk):
         user1.first_name = capfirst(request.POST.get('f_name'))
         user1.last_name  = capfirst(request.POST.get('l_name'))
         user1.username = request.POST.get('uname')
-        # pat.age = request.POST.get('age')
-        # pat.address = capfirst(request.POST.get('address'))
-        # pat.gender = request.POST.get('gender')
-        # user1.email = request.POST.get('email')
-        # pat.email = request.POST.get('email')
-        # pat.contact_num = request.POST.get('cnum')
-        # #fkey1= request.POST.get('doc')
-        # #pat.doctor = doctor.objects.get(id = fkey1)
-        # if len(request.FILES)!=0 :
-        #     doc.profile_pic = request.FILES.get('file')
+
 
 
         company.save()
@@ -3115,7 +3106,8 @@ def add_recurring_bills(request):
 
     company = company_details.objects.get(user = request.user)
     vendor = vendor_table.objects.filter(user = request.user)
-    acnt = Account.objects.filter(user = request.user)
+    acnt_name = Chart_of_Account.objects.filter(user = request.user)
+    acnt_type = Chart_of_Account.objects.filter(user = request.user).values('account_type').distinct()
     cust = customer.objects.filter(user = request.user)
     item = AddItem.objects.filter(user = request.user)
     payments = payment_terms.objects.filter(user = request.user)
@@ -3127,7 +3119,8 @@ def add_recurring_bills(request):
     context = {
                 'company' : company,
                 'vendor' : vendor,
-                'account': acnt,
+                'account': acnt_name,
+                'account_type' : acnt_type,
                 'customer' : cust,
                 'item' : item,
                 'payments' :payments,
@@ -3143,6 +3136,7 @@ def add_recurring_bills(request):
 def create_recurring_bills(request):
 
     company = company_details.objects.get(user = request.user)
+    # print(request.POST.get('customer').split(" ")[0])
     cust = customer.objects.get(id=request.POST.get('customer').split(" ")[0],user = request.user)
 
     if request.method == 'POST':
@@ -3156,18 +3150,18 @@ def create_recurring_bills(request):
         end = None if request.POST.get('end_date') == "" else  request.POST.get('end_date')
         pay_term =request.POST['terms']
         sub_total =request.POST['subtotal']
-        sgst=request.POST.get('sgst')
-        cgst=request.POST.get('cgst')
-        igst= request.POST.get('igst')
+
+        sgst=None if request.POST.get('sgst') == "" else  request.POST.get('sgst')
+        cgst=None if request.POST.get('cgst') == "" else  request.POST.get('cgst')
+        igst= None if request.POST.get('igst') == "" else  request.POST.get('igst')
+        # print(igst)
 
         if cust.state == company.state:
-            print('gst')
-            tax1 = request.POST.get('sgst') + request.POST.get('cgst')
+            tax1 = sgst + cgst
         else:
-            print('igst')
-            tax1 = request.POST.get('igst')
+            tax1 = igst
            
-        print(tax1)
+        # print(tax1)
 
         shipping_charge=0 if request.POST['addcharge'] == "" else request.POST['addcharge']
         grand_total=request.POST['grand_total']
@@ -3192,24 +3186,45 @@ def create_recurring_bills(request):
         accounts = request.POST.getlist("account[]")
         quantity = request.POST.getlist("qty[]")
         rate = request.POST.getlist("rate[]")
-        tax = request.POST.getlist("tax[]")
-        discount = request.POST.get("discount[]", 0)
+        if cust.state == company.state:
+            tax = request.POST.getlist("tax1[]")
+        else:
+            tax = request.POST.getlist("tax2[]")
+        discount = 0 if request.POST.get("discount[]") == " " else request.POST.get("discount[]")
         amount = request.POST.getlist("amount[]")
+        # print(items)
+        # print(accounts)
+        # print(quantity)
+        # print(tax)
+        # print(discount)
+        # print(amount)
 
-        if len(items)==len(accounts)==len(amount) and items and accounts  and amount:
+
+        if len(items)==len(accounts)==len(amount) == len(quantity) == len(rate)==len(tax) == len(discount) and items and accounts and quantity and rate and tax and discount and amount:
+                
+                print(accounts)
+                print(quantity)
+                print(tax)
+                print(discount)
+                print(amount)
+
                 mapped=zip(items,accounts,quantity,rate,tax,discount,amount)
                 mapped=list(mapped)
+
                 for ele in mapped:
 
                     it = AddItem.objects.get(user = request.user, id = ele[0]).Name
                     try:
                         int(ele[1])
-                        ac = Account.objects.get(user = request.user,id = ele[1]).accountName
+                        ac = Chart_of_Account.objects.get(user = request.user,id = ele[1]).account_name
                         
                     except ValueError:
                         
                         ac = ele[1]
                     
+                    # print(ele[4])
+                    # print(ele[5])
+                    # print(ele[6])
                     created = recurring_bills_items.objects.get_or_create(item = it,account = ac,quantity=ele[2],rate=ele[3],
                     tax=ele[4],discount = ele[5],amount=ele[6],user = u,company = company, recur_bills = r_bill)
 
@@ -3222,7 +3237,7 @@ def edit_recurring_bills(request,id):
 
     company = company_details.objects.get(user = request.user)
     vendor = vendor_table.objects.filter(user = request.user)
-    acnt = Account.objects.filter(user = request.user)
+    acnt = Chart_of_Account.objects.filter(user = request.user)
     cust = customer.objects.filter(user = request.user)
     item = AddItem.objects.filter(user = request.user)
     payments = payment_terms.objects.filter(user = request.user)
@@ -3314,7 +3329,7 @@ def change_recurring_bills(request,id):
                     it = AddItem.objects.get(user = request.user, id = ele[0]).Name
                     try:
                         int(ele[1])
-                        ac = Account.objects.get(user = request.user,id = ele[1]).accountName
+                        ac = Chart_of_Account.objects.get(user = request.user,id = ele[1]).account_name
                         
                     except ValueError:
                         
@@ -3845,7 +3860,7 @@ def recurbills_account(request):
         name=request.POST['acname']
         u = User.objects.get(id = request.user.id)
         
-        acnt=Account(accountType=type,accountName=name,user = u)
+        acnt=Chart_of_Account(account_type=type,account_name=name,user = u)
 
         acnt.save()
 
@@ -3857,9 +3872,9 @@ def account_dropdown(request):
     user = User.objects.get(id=request.user.id)
 
     options = {}
-    option_objects = Account.objects.filter(user = user)
+    option_objects = Chart_of_Account.objects.filter(user = user)
     for option in option_objects:
-        options[option.id] = [option.accountName,option.id]
+        options[option.id] = [option.account_name,option.id]
 
     return JsonResponse(options)
 

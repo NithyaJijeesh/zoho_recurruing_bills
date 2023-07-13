@@ -474,19 +474,19 @@
                                 {% if recur_bill.igst != "" %}
                                 <tr>
                                     <td style="font-weight:bold">IGST :</td>
-                                    <td style="font-weight:bold">{{recur_bill.igst|floatformat:2}}</td>
+                                    <td style="font-weight:bold">{% if recur_bill.igst == None %} 0 {% else %} {{recur_bill.igst|floatformat:2}} {% endif %}</td>
                                 </tr>
                                 {% endif %}
                                 {% if recur_bill.cgst != "" %}
                                 <tr>
                                     <td style="font-weight:bold">CGST :</td>
-                                    <td style="font-weight:bold">{{recur_bill.cgst|floatformat:2}}</td>
+                                    <td style="font-weight:bold">{% if recur_bill.cgst == None %} 0 {% else %} {{recur_bill.cgst|floatformat:2}} {% endif %}</td>
                                 </tr>
                                 {% endif %}
                                 {% if recur_bill.sgst != "" %}
                                 <tr>
                                     <td style="font-weight:bold">SGST:</td>
-                                    <td style="font-weight:bold">{{recur_bill.sgst|floatformat:2}}</td>
+                                    <td style="font-weight:bold">{% if recur_bill.sgst == None %} 0 {% else %} {{recur_bill.sgst|floatformat:2}} {% endif %}</td>
                                 </tr>
                                 {% endif %}
                                 {% if recur_bill.shipping_charge != "" %}
