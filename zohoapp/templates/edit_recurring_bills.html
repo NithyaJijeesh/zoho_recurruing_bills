@@ -370,7 +370,6 @@
                 <td  style="width: 20%;">
                   <div class="d-flex">
                     <select name='account[]' id="account" class="form-control acnt text-dark bg-light">
-                      <option value=" {{ri.account }}" selected >{{ ri.account }}</option>
                       <optgroup class=""label="Accounts Payable">
                         <option value='Accounts Payable'>Accounts Payable</option>
                       </optgroup>
@@ -489,11 +488,16 @@
                         <option value='Mortgages'>Mortgages</option>
                       </optgroup>
 
-                      <optgroup class="" label="Others">
+                      {% for ty in account_type %}
+                      <optgroup class="" label="{{ty.account_type}}">
                         {% for i in account %}
-                          <option value="{{ i.id }}">{{ i.accountName }} </option>
+                          {% if ty.account_type == i.account_type %}
+                          <option value="{{ i.id }}">{{ i.account_name }} </option>
+                          {% endif %}
                         {% endfor %}
                       </optgroup>
+                      {% endfor %}
+                    </select>
                   </div>  
                 </td>
                 
@@ -533,6 +537,17 @@
 
                 <td style="width: 11%;">
                   <input type="text" name='amount[]' id="amount{{forloop.counter}}" value=" {{ri.amount}} " placeholder='Amount' class=" text-dark bg-light form-control amount" step="0.00" min="0"  />
+                </td>
+                <td>
+                  <button type="button" id="0" class="btn btn-outline-primary clone_row text-center mb-1 p-1 " data-toggle= "tooltip" data-placement="bottom" tooltip="Clone"
+                      style = "width:25px; height: 25px; border-radius: 90% " >
+                    <i class="fa-solid fa-clone"></i>
+                  </button> 
+                    <br>
+                  <button type="button" id="0" class="btn btn-outline-danger remove_row text-center p-1" data-toggle= "tooltip" data-placement="bottom" tooltip="Remove"
+                      style = "width:25px; height: 25px; border-radius: 90% " >
+                    <i class="fa fa-window-close"></i>
+                  </button>
                 </td>
 
               </tr>
@@ -2464,11 +2479,15 @@ $(document).ready(function() {
                   <option value='Mortgages'>Mortgages</option>
                 </optgroup>
 
-                <optgroup class="" label="Others">
-                  {% for i in account %}
-                    <option value="{{ i.id }}">{{ i.accountName }} </option>
+                <{% for ty in account_type %}
+                  <optgroup class="" label="{{ty.account_type}}">
+                    {% for i in account %}
+                      {% if ty.account_type == i.account_type %}
+                      <option value="{{ i.id }}">{{ i.account_name }} </option>
+                      {% endif %}
+                    {% endfor %}
+                  </optgroup>
                   {% endfor %}
-                </optgroup>
               </select>
             </div>  
           </td>
@@ -2615,7 +2634,7 @@ $(document).ready(function() {
       var newId = idPrefix + roinc ;
       newRow.find('.tax1').eq(index).val(value7).attr('id' , newId);
     });
-    
+
     inter.each(function(index){
       var value8 = $(this).val();
       var idPrefix = 'inter_tax';
@@ -2647,17 +2666,19 @@ $(document).ready(function() {
       amount_t += parseFloat($("#amount"+i).val());
 
       $("#subtotal").val(amount_t);
-
+      // console.log($("#amount"+i).val())
+      
       var tax1 = $("#intra_tax" +i).val();
       var tax2 = $("#inter_tax" +i).val();
-
+      // console.log(tax1)
+      // console.log(tax2)
       if (tax1 == 0){
         if(tax2 == 0){
           tax = 0;
           tax_tot += tax;
         }
         else{
-          tax = ($("#amount"+i).val()*(tax2/100));
+          tax = (($("#qty"+i).val())*($("#rate"+i).val()))*(tax2/100) ;
           
           tax_tot += tax;
           // console.log(tax_tot);
@@ -2666,7 +2687,7 @@ $(document).ready(function() {
       }
       else{
 
-        tax = ($("#amount"+i).val()*(tax1/100));
+        tax = (($("#qty"+i).val())*($("#rate"+i).val()))*(tax1/100) ;
         tax_tot += tax;
         $("#sgst").val(tax_tot/2);
         $("#cgst").val(tax_tot/2);
@@ -2678,100 +2699,100 @@ $(document).ready(function() {
         $("#grandtotal").val(amount_t+tax_tot)
       }
     }
-  });
-  
-  $(document).on('click','.remove_row',function(){
-    
-    var row_id = $(this).attr("id");
-    $('#addr'+row_id+'').remove();
+});
 
-    $('tr[id^="addr"]').each(function(index) {
-        var new_row_id = 'addr' + (index);
-        $(this).attr('id', new_row_id);
+$(document).on('click','.remove_row',function(){
 
-        $(this).find('select[id^="item"]').each(function(tdIndex) {
-          var new_td_id = 'item' + (index * 1 + tdIndex);
-          $(this).attr('id', new_td_id);
-        });
-        $(this).find('select[id^="account"]').each(function(tdIndex) {
-          var new_td_id = 'account' + (index * 1 + tdIndex);
-          $(this).attr('id', new_td_id);
-        });
-        $(this).find('input[id^="qty"]').each(function(tdIndex) {
-          var new_td_id = 'qty' + (index * 1 + tdIndex);
-          $(this).attr('id', new_td_id);
-        });
-        $(this).find('input[id^="rate"]').each(function(tdIndex) {
-          var new_td_id = 'rate' + (index * 1 + tdIndex);
-          $(this).attr('id', new_td_id);
-        });
-        $(this).find('input[id^="disc"]').each(function(tdIndex) {
-          var new_td_id = 'disc' + (index * 1 + tdIndex);
-          $(this).attr('id', new_td_id);
-        });
-        $(this).find('input[id^="amount"]').each(function(tdIndex) {
-          var new_td_id = 'amount' + (index * 1 + tdIndex);
-          $(this).attr('id', new_td_id);
-        });
-        $(this).find('select[id^="intra_tax"]').each(function(tdIndex) {
-          var new_td_id = 'intra_tax' + (index * 1 + tdIndex);
-          $(this).attr('id', new_td_id);
-        });
-        $(this).find('select[id^="inter_tax"]').each(function(tdIndex) {
-          var new_td_id = 'inter_tax' + (index * 1 + tdIndex);
-          $(this).attr('id', new_td_id);
-        });
-        $(this).find('button').each(function(tdIndex) {
-          var new_td_id = (index * 1 + tdIndex);
-          $(this).attr('id', new_td_id);
-        });
-        $(this).find('button[class="remove_row"]').each(function(tdIndex) {
-          var new_td_id1 = ((index * 1) + tdIndex);
-          $(this).attr('id', new_td_id1);
-        });
-        var row_c = $("#items-table-body tr").length;
-        var amount_t = 0;
-        var tax = 0;
-        var tax_tot = 0;
-        var ship = parseFloat( $("#addcharge").val());
-        for(var i=0; i<row_c;i++){
-          amount_t += parseFloat($("#amount"+i).val());
+  var row_id = $(this).attr("id");
+  $('#addr'+row_id+'').remove();
 
-          $("#subtotal").val(amount_t);
+  $('tr[id^="addr"]').each(function(index) {
+      var new_row_id = 'addr' + (index);
+      $(this).attr('id', new_row_id);
 
-          var tax1 = $("#intra_tax" +i).val();
-          var tax2 = $("#inter_tax" +i).val();
+      $(this).find('select[id^="item"]').each(function(tdIndex) {
+        var new_td_id = 'item' + (index * 1 + tdIndex);
+        $(this).attr('id', new_td_id);
+      });
+      $(this).find('select[id^="account"]').each(function(tdIndex) {
+        var new_td_id = 'account' + (index * 1 + tdIndex);
+        $(this).attr('id', new_td_id);
+      });
+      $(this).find('input[id^="qty"]').each(function(tdIndex) {
+        var new_td_id = 'qty' + (index * 1 + tdIndex);
+        $(this).attr('id', new_td_id);
+      });
+      $(this).find('input[id^="rate"]').each(function(tdIndex) {
+        var new_td_id = 'rate' + (index * 1 + tdIndex);
+        $(this).attr('id', new_td_id);
+      });
+      $(this).find('input[id^="disc"]').each(function(tdIndex) {
+        var new_td_id = 'disc' + (index * 1 + tdIndex);
+        $(this).attr('id', new_td_id);
+      });
+      $(this).find('input[id^="amount"]').each(function(tdIndex) {
+        var new_td_id = 'amount' + (index * 1 + tdIndex);
+        $(this).attr('id', new_td_id);
+      });
+      $(this).find('select[id^="intra_tax"]').each(function(tdIndex) {
+        var new_td_id = 'intra_tax' + (index * 1 + tdIndex);
+        $(this).attr('id', new_td_id);
+      });
+      $(this).find('select[id^="inter_tax"]').each(function(tdIndex) {
+        var new_td_id = 'inter_tax' + (index * 1 + tdIndex);
+        $(this).attr('id', new_td_id);
+      });
+      $(this).find('button').each(function(tdIndex) {
+        var new_td_id = (index * 1 + tdIndex);
+        $(this).attr('id', new_td_id);
+      });
+      $(this).find('button[class="remove_row"]').each(function(tdIndex) {
+        var new_td_id1 = ((index * 1) + tdIndex);
+        $(this).attr('id', new_td_id1);
+      });
+      var row_c = $("#items-table-body tr").length;
+      var amount_t = 0;
+      var tax = 0;
+      var tax_tot = 0;
+      var ship = parseFloat( $("#addcharge").val());
+      for(var i=0; i<row_c;i++){
+        amount_t += parseFloat($("#amount"+i).val());
 
-          if (tax1 == 0){
-            if(tax2 == 0){
-              tax = 0;
-              tax_tot += tax;
-            }
-            else{
-              tax = ($("#amount"+i).val()*(tax2/100));
-              
-              tax_tot += tax;
-              // console.log(tax_tot);
-              $("#igst").val(tax_tot);
-            }
-          }
-          else{
+        $("#subtotal").val(amount_t);
 
-            tax = ($("#amount"+i).val()*(tax1/100));
+        var tax1 = $("#intra_tax" +i).val();
+        var tax2 = $("#inter_tax" +i).val();
+
+        if (tax1 == 0){
+          if(tax2 == 0){
+            tax = 0;
             tax_tot += tax;
-            $("#sgst").val(tax_tot/2);
-            $("#cgst").val(tax_tot/2);
-          }
-          if(ship){
-            $("#grandtotal").val(amount_t+tax_tot+ship)
           }
           else{
-            $("#grandtotal").val(amount_t+tax_tot)
+            tax = (($("#qty"+i).val())*($("#rate"+i).val()))*(tax2/100);
+            
+            tax_tot += tax;
+            // console.log(tax_tot);
+            $("#igst").val(tax_tot);
           }
         }
-    });
+        else{
 
+          tax = (($("#qty"+i).val())*($("#rate"+i).val()))*(tax2/100) ;
+          tax_tot += tax;
+          $("#sgst").val(tax_tot/2);
+          $("#cgst").val(tax_tot/2);
+        }
+        if(ship){
+          $("#grandtotal").val(amount_t+tax_tot+ship)
+        }
+        else{
+          $("#grandtotal").val(amount_t+tax_tot)
+        }
+      }
   });
+
+});
 
   $(document).ready(function() {
     $("#fname, #lname").change(function() {
@@ -2845,8 +2866,7 @@ $(document).ready(function() {
     var chkbtn1 = document.getElementById('vokay');
     var chkbtn2 = document.getElementById('csokay');
     if (chkbtn1.checked == true) {
-      document.getElementById('vsstreet1').value = document.getElementById('vstreet1').value;
-      document.getElementById('vsstreet2').value = document.getElementById('vstreet2').value;
+      document.getElementById('vsstreet').value = document.getElementById('vstreet').value;
       document.getElementById('vscity').value = document.getElementById('vcity').value;
       document.getElementById('vspincode').value = document.getElementById('vpincode').value;
       document.getElementById('vscountry').value = document.getElementById('vcountry').value;
@@ -2874,7 +2894,8 @@ $(document).ready(function() {
       document.getElementById('csfax').value = document.getElementById('cfax').value;
     } 
     else {
-      document.getElementById('csstreet').value = '';
+      document.getElementById('csstreet1').value = '';    
+      document.getElementById('csstreet1').value = '';
       document.getElementById('cscity').value = '';
       document.getElementById('csstate').value = '';
       document.getElementById('cspincode').value = '';

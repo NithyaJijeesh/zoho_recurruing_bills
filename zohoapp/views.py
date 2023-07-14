@@ -3149,6 +3149,7 @@ def create_recurring_bills(request):
         start = request.POST.get('start_date')
         end = None if request.POST.get('end_date') == "" else  request.POST.get('end_date')
         pay_term =request.POST['terms']
+
         sub_total =request.POST['subtotal']
 
         sgst=None if request.POST.get('sgst') == "" else  request.POST.get('sgst')
@@ -3190,23 +3191,10 @@ def create_recurring_bills(request):
             tax = request.POST.getlist("tax1[]")
         else:
             tax = request.POST.getlist("tax2[]")
-        discount = 0 if request.POST.get("discount[]") == " " else request.POST.get("discount[]")
+        discount = 0 if request.POST.getlist("discount[]") == " " else request.POST.getlist("discount[]")
         amount = request.POST.getlist("amount[]")
-        # print(items)
-        # print(accounts)
-        # print(quantity)
-        # print(tax)
-        # print(discount)
-        # print(amount)
-
 
         if len(items)==len(accounts)==len(amount) == len(quantity) == len(rate)==len(tax) == len(discount) and items and accounts and quantity and rate and tax and discount and amount:
-                
-                print(accounts)
-                print(quantity)
-                print(tax)
-                print(discount)
-                print(amount)
 
                 mapped=zip(items,accounts,quantity,rate,tax,discount,amount)
                 mapped=list(mapped)
@@ -3225,7 +3213,7 @@ def create_recurring_bills(request):
                     # print(ele[4])
                     # print(ele[5])
                     # print(ele[6])
-                    created = recurring_bills_items.objects.get_or_create(item = it,account = ac,quantity=ele[2],rate=ele[3],
+                    created = recurring_bills_items.objects.create(item = it,account = ac,quantity=ele[2],rate=ele[3],
                     tax=ele[4],discount = ele[5],amount=ele[6],user = u,company = company, recur_bills = r_bill)
 
         return redirect('recurring_bill')
@@ -3274,6 +3262,8 @@ def edit_recurring_bills(request,id):
 
 def change_recurring_bills(request,id):
             
+    company = company_details.objects.get(user = request.user)
+    cust = customer.objects.get(customerName=request.POST.get('customer').strip(" "),user = request.user)
     r_bill=recurring_bills.objects.get(user = request.user,id=id)
 
     if request.method == 'POST':
@@ -3303,19 +3293,21 @@ def change_recurring_bills(request,id):
         r_bill.save()          
 
         items = request.POST.getlist("item[]")
-        account = request.POST.getlist("account[]")
+        accounts = request.POST.getlist("account[]")
         quantity = request.POST.getlist("quantity[]")
         rate = request.POST.getlist("rate[]")
-        tax = request.POST.getlist("tax[]")
-        discount = request.POST.get("discount[]", 0)
+        if cust.state == company.state:
+            tax = request.POST.getlist("tax1[]")
+        else:
+            tax = request.POST.getlist("tax2[]")
+        discount = 0 if request.POST.getlist("discount[]") == " " else request.POST.getlist("discount[]")
         amount = request.POST.getlist("amount[]")
 
-        # billid=recurring_bills.objects.get(id=r_bill.id,user = request.user)
-
-        if len(items)==len(account)==len(amount) :
-            
-            mapped=zip(items,account,quantity,rate,tax,discount,amount)
+        if len(items)==len(accounts)==len(amount) == len(quantity) == len(rate)==len(tax) == len(discount) and items and accounts and quantity and rate and tax and discount and amount:
+                
+            mapped=zip(items,accounts,quantity,rate,tax,discount,amount)
             mapped=list(mapped)
+
             
             count = recurring_bills_items.objects.filter(recur_bills=r_bill.id).count()
             

@@ -2872,9 +2872,9 @@ $(document).ready(function() {
   function addressSame(){
     var chkbtn1 = document.getElementById('vokay');
     var chkbtn2 = document.getElementById('csokay');
+
     if (chkbtn1.checked == true) {
-      document.getElementById('vsstreet1').value = document.getElementById('vstreet1').value;
-      document.getElementById('vsstreet2').value = document.getElementById('vstreet2').value;
+      document.getElementById('vsstreet').value = document.getElementById('vstreet').value;
       document.getElementById('vscity').value = document.getElementById('vcity').value;
       document.getElementById('vspincode').value = document.getElementById('vpincode').value;
       document.getElementById('vscountry').value = document.getElementById('vcountry').value;
@@ -2902,7 +2902,8 @@ $(document).ready(function() {
       document.getElementById('csfax').value = document.getElementById('cfax').value;
     } 
     else {
-      document.getElementById('csstreet').value = '';
+      document.getElementById('csstreet1').value = '';
+      document.getElementById('csstreet2').value = '';
       document.getElementById('cscity').value = '';
       document.getElementById('csstate').value = '';
       document.getElementById('cspincode').value = '';
