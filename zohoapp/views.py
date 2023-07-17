@@ -3898,6 +3898,7 @@ def get_cust_state(request):
     
 @login_required(login_url='login')
 def export_pdf(request, id):
+    
     company = company_details.objects.get(user=request.user)
     bills = recurring_bills.objects.filter(user=request.user)
     rbill = recurring_bills.objects.get(user=request.user, id=id)

@@ -81,6 +81,10 @@
       overflow: scroll;
     }
 
+    .item{
+      height: auto;
+    }
+
     </style>
 
 
@@ -147,7 +151,7 @@
         </div>
 
         <div class="col-md-6">
-            <select name="srcofsupply" id="" class="form-control text-dark bg-light">
+            <select name="srcofsupply" id="srcofsupply" class="form-control text-dark bg-light">
                 <option value="{{recur_bill.source_supply}}" selected>{{recur_bill.source_supply}}</option>    
 
                 <option value="[AN] Andaman and Nicobar Islads">[AN] Andaman and Nicobar Islads</option>
@@ -355,7 +359,7 @@
             </thead>
             <tbody id="items-table-body">
               {% for ri in recur_items %}
-              <tr id='addr{{forloop.counter}}'>
+              <tr id='addr{{forloop.counter}}' class="addr">
                 <td style="width: 20%;">
                   <div class="d-flex">
                     <select name='item[]' id="item{{forloop.counter0}}" class="form-control item text-dark bg-light" onchange = "showRate(this.id,this.value);">
@@ -369,7 +373,7 @@
                 </td>
                 <td  style="width: 20%;">
                   <div class="d-flex">
-                    <select name='account[]' id="account" class="form-control acnt text-dark bg-light">
+                    <select name='account[]' id="account{{forloop.counter0}}" class="form-control acnt text-dark bg-light">
                       <optgroup class=""label="Accounts Payable">
                         <option value='Accounts Payable'>Accounts Payable</option>
                       </optgroup>
@@ -2296,38 +2300,7 @@ $(document).ready(function() {
                 // gst or igst in tax
 
               $("#cust_state").val(data.state);
-              $(".selecttax").removeClass('d-flex');
-              $(".selecttax").addClass('d-none');
               
-              if( data.state == $("#company_state").val())
-              {
-                $(".tax2").addClass('d-none');
-                $(".tax1").removeClass('d-none');
-                $(".tax1").addClass('d-flex');
-
-                $("#cgst1").removeClass('d-none');
-                $("#cgst1").addClass('d-flex');
-                $("#sgst1").removeClass('d-none');
-                $("#sgst1").addClass('d-flex');
-
-                $("#igst1").removeClass('d-flex');
-                $("#igst1").addClass('d-none');
-
-              }
-              else{
-
-                $(".tax1").addClass('d-none');
-                $(".tax2").removeClass('d-none');
-                $(".tax2").addClass('d-flex');
-
-                $("#igst1").removeClass('d-none');
-                $("#igst1").addClass('d-flex');
-
-                $("#cgst1").removeClass('d-flex');
-                $("#cgst1").addClass('d-none');
-                $("#sgst1").removeClass('d-flex');
-                $("#sgst1").addClass('d-none');
-              }
             }
             
         });
@@ -3478,22 +3451,60 @@ $(document).ready(function() {
 
   }
 
+  $(document).on('change', '#srcofsupply',function(){
+
+    $(".selecttax").removeClass('d-none');
+    $(".selecttax").addClass('d-flex');
+    var st = $("#srcofsupply").val().slice(4).trim();
+
+    if( st == $("#company_state").val())
+    {
+      $(".tax2").removeClass('d-flex');
+      $(".tax2").addClass('d-none');
+      $(".tax1").removeClass('d-flex');
+      $(".tax1").addClass('d-none');
+
+      $("#cgst1").removeClass('d-none');
+      $("#cgst1").addClass('d-flex');
+      $("#sgst1").removeClass('d-none');
+      $("#sgst1").addClass('d-flex');
+
+      $("#igst1").removeClass('d-flex');
+      $("#igst1").addClass('d-none');
+
+    }
+    else{
+      $(".tax1").removeClass('d-flex');
+      $(".tax1").addClass('d-none');
+      $(".tax2").removeClass('d-flex');
+      $(".tax2").addClass('d-none');
+
+      $("#igst1").removeClass('d-none');
+      $("#igst1").addClass('d-flex');
+
+      $("#cgst1").removeClass('d-flex');
+      $("#cgst1").addClass('d-none');
+      $("#sgst1").removeClass('d-flex');
+      $("#sgst1").addClass('d-none');
+    }
+  });
 
   $(document).on("click",".selecttax",function(){
 
     $(".selecttax").removeClass('d-flex');
     $(".selecttax").addClass('d-none');
+    var sta = $("#srcofsupply").val().slice(4).trim();
 
-    if($("#cust_state").val() == $("#company_state").val()){
-      $(".tax2").addClass('d-none');
-      $(".tax1").removeClass('d-none');
-      $(".tax1").addClass('d-flex');
+    if(sta == $("#company_state").val()){
+    $(".tax2").addClass('d-none');
+    $(".tax1").removeClass('d-none');
+    $(".tax1").addClass('d-flex');
 
     }
     else{
-      $(".tax1").addClass('d-none');
-      $(".tax2").removeClass('d-none');
-      $(".tax2").addClass('d-flex');
+    $(".tax1").addClass('d-none');
+    $(".tax2").removeClass('d-none');
+    $(".tax2").addClass('d-flex');
     }
 
   });
@@ -3727,11 +3738,11 @@ $(document).on('change','.disc',function(){
 
     $(document).on("change","#addcharge",function(){
 
-      if($("#cust_state").val() == $("#company_state").val()){
+      if($("#srcofsupply").val() == $("#company_state").val()){
         var total =parseFloat( $("#subtotal").val())+ parseFloat( $("#sgst").val())+ parseFloat($("#cgst").val())+ parseFloat($("#addcharge").val());
         $("#grandtotal").val(total);
       }
-      else if($("#cust_state").val() != $("#company_state").val()){
+      else if($("#srcofsupply").val() != $("#company_state").val()){
         var total = parseFloat($("#subtotal").val())+  parseFloat($("#igst").val())+ parseFloat($("#addcharge").val());
         $("#grandtotal").val(total);
       }

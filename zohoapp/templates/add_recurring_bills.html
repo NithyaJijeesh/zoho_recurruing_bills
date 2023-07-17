@@ -3,8 +3,6 @@
 {% load static %}
 {% load tz %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-<!-- <link rel="stylesheet" href="{% static 'assets/css/style.css' %}"> -->
-
 
 <style>
 
@@ -84,6 +82,9 @@
       z-index: 9999;
       overflow: scroll;
     }
+    .item{
+      height: auto;
+    }
     </style>
 
 
@@ -148,8 +149,9 @@
         </div>
 
         <div class="col-md-6">
-            <select name="srcofsupply" id="" class="form-control text-dark bg-light">
-                <option value="[AN] Andaman and Nicobar Islads">[AN] Andaman and Nicobar Islads</option>
+            <select name="srcofsupply" id="srcofsupply" class="form-control text-dark bg-light">
+                <option value=" " disabled selected>Select Source of Supply</option>
+                <option value="[AN] Andaman and Nicobar Islads">[AN] Andaman and Nicobar Islands</option>
                 <option value="[AD] Andhra Predhesh">[AD] Andhra Predhesh</option>
                 <option value="[AR] Arunachal Predesh">[AR] Arunachal Predesh</option>
                 <option value="[AS] Assam">[AS] Assam</option>
@@ -166,7 +168,7 @@
                 <option value="[JK] Jammu and Kashmir">[JK] Jammu and Kashmir</option>
                 <option value="[JH] Jharkhand">[JH] Jharkhand</option>
                 <option value="[KA] Karnataka">[KA] Karnataka</option>
-                <option selected="selected" value="[KL] Kerala">[KL] Kerala</option>
+                <option value="[KL] Kerala">[KL] Kerala</option>
                 <option value="[LA] Ladakh">[LA] Ladakh</option>
                 <option value="[LD] Lakshadweep">[LD] Lakshadweep</option>
                 <option value="[MP] Madhya Predesh">[MP] Madhya Predesh</option>
@@ -351,20 +353,22 @@
             </thead>
             <tbody id="items-table-body">
               <tr id = 'addr0' class = 'addr'>
-                <td style="width: 20%;">
+                <td  style="width: 20%;">
                   <div class="d-flex">
-                    <select name='item[]' id="item0" class="form-control item text-dark bg-light" >
+                    <select name='item[]' id="item0" class="form-control item text-dark bg-light">
                       <option value=" " selected disabled>Select Item</option>
                       {% for i in item %}
                         <option value="{{i.id}}">{{ i.Name }} </option>
                       {% endfor %}
-                    </select>
                     
+                    </select>
                   </div>  
                 </td>
+                
                 <td  style="width: 20%;">
                   <div class="d-flex">
-                    <select name='account[]' id="account" class="form-control acnt text-dark bg-light">
+                    <select name='account[]' id="account0" class="form-control acnt text-dark bg-light">
+                      <option value=" " selected disabled>Select Account</option>
                       <optgroup class=""label="Accounts Payable">
                         <option value='Accounts Payable'>Accounts Payable</option>
                       </optgroup>
@@ -2303,47 +2307,12 @@ $(document).ready(function() {
                 // gst or igst in tax
 
               $("#cust_state").val(data.state);
-              $(".selecttax").removeClass('d-flex');
-              $(".selecttax").addClass('d-none');
               
-              if( data.state == $("#company_state").val())
-              {
-                $(".tax2").addClass('d-none');
-                $(".tax1").removeClass('d-none');
-                $(".tax1").addClass('d-flex');
-
-                $("#cgst1").removeClass('d-none');
-                $("#cgst1").addClass('d-flex');
-                $("#sgst1").removeClass('d-none');
-                $("#sgst1").addClass('d-flex');
-
-                $("#igst1").removeClass('d-flex');
-                $("#igst1").addClass('d-none');
-
-              }
-              else{
-
-                $(".tax1").addClass('d-none');
-                $(".tax2").removeClass('d-none');
-                $(".tax2").addClass('d-flex');
-
-                $("#igst1").removeClass('d-none');
-                $("#igst1").addClass('d-flex');
-
-                $("#cgst1").removeClass('d-flex');
-                $("#cgst1").addClass('d-none');
-                $("#sgst1").removeClass('d-flex');
-                $("#sgst1").addClass('d-none');
-              }
             }
-            
+           
         });
-    
     });
 });
-
-
-
 
   $(document).ready(function(){
 
@@ -2354,7 +2323,7 @@ $(document).ready(function() {
 
       $('#items-table-body').append(
         
-        `<tr id='addr${roinc}' class = 'addr'>
+        `<tr id='addr${roinc}' class = 'addr '>
           <td style="width: 20%;">
             <div class="d-flex">
               <select name='item[]' id="item${roinc}" class="form-control item text-dark bg-light" onchange = "showRate(this.id,this.value);">
@@ -2673,12 +2642,9 @@ $(document).ready(function() {
       amount_t += parseFloat($("#amount"+i).val());
 
       $("#subtotal").val(amount_t);
-      // console.log($("#amount"+i).val())
       
       var tax1 = $("#intra_tax" +i).val();
       var tax2 = $("#inter_tax" +i).val();
-      // console.log(tax1)
-      // console.log(tax2)
       if (tax1 == 0){
         if(tax2 == 0){
           tax = 0;
@@ -2688,7 +2654,6 @@ $(document).ready(function() {
           tax = (($("#qty"+i).val())*($("#rate"+i).val()))*(tax2/100) ;
           
           tax_tot += tax;
-          // console.log(tax_tot);
           $("#igst").val(tax_tot);
         }
       }
@@ -3486,13 +3451,51 @@ $(document).ready(function() {
 
   }
 
+  $(document).on('change', '#srcofsupply',function(){
 
+      $(".selecttax").removeClass('d-none');
+      $(".selecttax").addClass('d-flex');
+      var st = $("#srcofsupply").val().slice(4).trim();
+
+      if( st == $("#company_state").val())
+      {
+        $(".tax2").removeClass('d-flex');
+        $(".tax2").addClass('d-none');
+        $(".tax1").removeClass('d-flex');
+        $(".tax1").addClass('d-none');
+
+        $("#cgst1").removeClass('d-none');
+        $("#cgst1").addClass('d-flex');
+        $("#sgst1").removeClass('d-none');
+        $("#sgst1").addClass('d-flex');
+
+        $("#igst1").removeClass('d-flex');
+        $("#igst1").addClass('d-none');
+
+      }
+      else{
+        $(".tax1").removeClass('d-flex');
+        $(".tax1").addClass('d-none');
+        $(".tax2").removeClass('d-flex');
+        $(".tax2").addClass('d-none');
+
+        $("#igst1").removeClass('d-none');
+        $("#igst1").addClass('d-flex');
+
+        $("#cgst1").removeClass('d-flex');
+        $("#cgst1").addClass('d-none');
+        $("#sgst1").removeClass('d-flex');
+        $("#sgst1").addClass('d-none');
+      }
+    });
+ 
   $(document).on("click",".selecttax",function(){
 
     $(".selecttax").removeClass('d-flex');
     $(".selecttax").addClass('d-none');
+    var sta = $("#srcofsupply").val().slice(4).trim();
 
-    if($("#cust_state").val() == $("#company_state").val()){
+    if(sta == $("#company_state").val()){
       $(".tax2").addClass('d-none');
       $(".tax1").removeClass('d-none');
       $(".tax1").addClass('d-flex');
@@ -3735,11 +3738,13 @@ $(document).on('change','.disc',function(){
 
     $(document).on("change","#addcharge",function(){
 
-      if($("#cust_state").val() == $("#company_state").val()){
+      var sta = $("#srcofsupply").val().slice(4).trim();
+
+      if(sta == $("#company_state").val()){
         var total =parseFloat( $("#subtotal").val())+ parseFloat( $("#sgst").val())+ parseFloat($("#cgst").val())+ parseFloat($("#addcharge").val());
         $("#grandtotal").val(total);
       }
-      else if($("#cust_state").val() != $("#company_state").val()){
+      else if(sta != $("#company_state").val()){
         var total = parseFloat($("#subtotal").val())+  parseFloat($("#igst").val())+ parseFloat($("#addcharge").val());
         $("#grandtotal").val(total);
       }
