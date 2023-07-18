@@ -3026,7 +3026,13 @@ def deletechallan(request,id):
 def recurring_bill(request):
 
     company = company_details.objects.get(user = request.user)
-    recur = recurring_bills.objects.filter(user = request.user.id)
+    recur = recurring_bills.objects.filter(user = request.user.id).values()
+    for r in recur:
+        vn = r['vendor_name'].split()[1:]
+        r['vend_name'] = " ".join(vn)
+        cn = r['customer_name'].split()[2:]
+        r['cust_name'] = " ".join(cn)
+
     context = {
                 'company' : company,
                 'recur_bill' : recur
@@ -3037,67 +3043,116 @@ def recurring_bill(request):
 
 @login_required(login_url='login')
 def recur_custasc(request):
-    cmp1 = company_details.objects.get(user = request.user)
-    rec_bill =recurring_bills.objects.filter(user = request.user).order_by('customer_name')
+
+    company = company_details.objects.get(user = request.user)
+    recur = recurring_bills.objects.filter(user = request.user.id).values()
+    for r in recur:
+        vn = r['vendor_name'].split()[1:]
+        r['vend_name'] = " ".join(vn)
+        cn = r['customer_name'].split()[2:]
+        r['cust_name'] = " ".join(cn)
+
+    sorted_recur = sorted(recur, key=lambda r: r['cust_name'])    
 
     context = {
-            'recur_bill':rec_bill,
-            'cmp1': cmp1
+                'company' : company,
+                'recur_bill' : sorted_recur
             }
     return render(request,'recurring_bills.html',context)
 
+
 @login_required(login_url='login')
 def recur_custdesc(request):
-    cmp1 = company_details.objects.get(user = request.user)
-    rec_bill =recurring_bills.objects.filter(user = request.user).order_by('-customer_name')
+    company = company_details.objects.get(user = request.user)
+    recur = recurring_bills.objects.filter(user = request.user.id).values()
+    for r in recur:
+        vn = r['vendor_name'].split()[1:]
+        r['vend_name'] = " ".join(vn)
+        cn = r['customer_name'].split()[2:]
+        r['cust_name'] = " ".join(cn)
+
+    sorted_recur = sorted(recur, key=lambda r: r['cust_name'],reverse=True)    
 
     context = {
-            'recur_bill':rec_bill,
-            'cmp1': cmp1
+                'company' : company,
+                'recur_bill' : sorted_recur
             }
     return render(request,'recurring_bills.html',context)
 
 @login_required(login_url='login')
 def recur_vendorasc(request):
-    cmp1 = company_details.objects.get(user = request.user)
-    rec_bill =recurring_bills.objects.filter(user = request.user).order_by('vendor_name')
+
+    company = company_details.objects.get(user = request.user)
+    recur = recurring_bills.objects.filter(user = request.user.id).values()
+    for r in recur:
+        vn = r['vendor_name'].split()[1:]
+        r['vend_name'] = " ".join(vn)
+        cn = r['customer_name'].split()[2:]
+        r['cust_name'] = " ".join(cn)
+
+    sorted_recur = sorted(recur, key=lambda r: r['vend_name'])    
 
     context = {
-            'recur_bill':rec_bill,
-            'cmp1': cmp1
+                'company' : company,
+                'recur_bill' : sorted_recur
             }
     return render(request,'recurring_bills.html',context)
 
 @login_required(login_url='login')
 def recur_vendordesc(request):
-    cmp1 = company_details.objects.get(user = request.user)
-    rec_bill =recurring_bills.objects.filter(user = request.user).order_by('-vendor_name')
+
+    company = company_details.objects.get(user = request.user)
+    recur = recurring_bills.objects.filter(user = request.user.id).values()
+    for r in recur:
+        vn = r['vendor_name'].split()[1:]
+        r['vend_name'] = " ".join(vn)
+        cn = r['customer_name'].split()[2:]
+        r['cust_name'] = " ".join(cn)
+
+        sorted_recur = sorted(recur, key=lambda r: r['vend_name'],reverse=True)    
 
     context = {
-            'recur_bill':rec_bill,
-            'cmp1': cmp1
+                'company' : company,
+                'recur_bill' : sorted_recur
             }
     return render(request,'recurring_bills.html',context)
 
 @login_required(login_url='login')
 def recur_profileasc(request):
-    cmp1 = company_details.objects.get(user = request.user)
-    rec_bill =recurring_bills.objects.filter(user = request.user).order_by('profile_name')
-    print(rec_bill)
+
+    company = company_details.objects.get(user = request.user)
+    recur = recurring_bills.objects.filter(user = request.user.id).values()
+    for r in recur:
+        vn = r['vendor_name'].split()[1:]
+        r['vend_name'] = " ".join(vn)
+        cn = r['customer_name'].split()[2:]
+        r['cust_name'] = " ".join(cn)
+
+    sorted_recur = sorted(recur, key=lambda r: r['profile_name'],reverse=False) 
+
     context = {
-            'recur_bill':rec_bill,
-            'cmp1': cmp1
+                'company' : company,
+                'recur_bill' : sorted_recur
             }
     return render(request,'recurring_bills.html',context)
 
+
 @login_required(login_url='login')
 def recur_profiledesc(request):
-    cmp1 = company_details.objects.get(user = request.user)
-    rec_bill =recurring_bills.objects.filter(user = request.user).order_by('-profile_name')
+
+    company = company_details.objects.get(user = request.user)
+    recur = recurring_bills.objects.filter(user = request.user.id).values()
+    for r in recur:
+        vn = r['vendor_name'].split()[1:]
+        r['vend_name'] = " ".join(vn)
+        cn = r['customer_name'].split()[2:]
+        r['cust_name'] = " ".join(cn)
+
+    sorted_recur = sorted(recur, key=lambda r: r['profile_name'],reverse=True) 
 
     context = {
-            'recur_bill':rec_bill,
-            'cmp1': cmp1
+                'company' : company,
+                'recur_bill' : sorted_recur
             }
     return render(request,'recurring_bills.html',context)
 
@@ -3140,9 +3195,12 @@ def create_recurring_bills(request):
     cust = customer.objects.get(id=request.POST.get('customer').split(" ")[0],user = request.user)
 
     if request.method == 'POST':
-        vname = request.POST.get('vendor').rsplit(' ', 1)
-        cname = request.POST.get('customer').split(" ")[1:]
-        cname = " ".join(cname)
+        # vname = request.POST.get('vendor').rsplit(' ', 1)
+        # cname = request.POST.get('customer').split(" ")[1:]
+        vname  = request.POST.get('vendor')
+        print(vname)
+        cname = request.POST.get('customer')
+        # cname = " ".join(cname)
         src_supply = request.POST.get('srcofsupply')
         prof = request.POST['prof_name']
         repeat = request.POST['repeat']
@@ -3157,7 +3215,7 @@ def create_recurring_bills(request):
         igst= None if request.POST.get('igst') == "" else  request.POST.get('igst')
         # print(igst)
 
-        if cust.state == company.state:
+        if src_supply == company.state:
             tax1 = sgst + cgst
         else:
             tax1 = igst
@@ -3170,7 +3228,7 @@ def create_recurring_bills(request):
 
         u = User.objects.get(id = request.user.id)
 
-        bills = recurring_bills(vendor_name=vname[0],profile_name=prof,customer_name = cname,
+        bills = recurring_bills(vendor_name=vname,profile_name=prof,customer_name = cname,
                     source_supply=src_supply,repeat_every = repeat,start_date = start,end_date = end,
                     payment_terms =pay_term,sub_total=sub_total,sgst=sgst,cgst=cgst,igst=igst,
                     tax_amount=tax1, shipping_charge = shipping_charge,
@@ -3187,7 +3245,7 @@ def create_recurring_bills(request):
         accounts = request.POST.getlist("account[]")
         quantity = request.POST.getlist("qty[]")
         rate = request.POST.getlist("rate[]")
-        if cust.state == company.state:
+        if src_supply == company.state:
             tax = request.POST.getlist("tax1[]")
         else:
             tax = request.POST.getlist("tax2[]")
@@ -3226,23 +3284,27 @@ def edit_recurring_bills(request,id):
     company = company_details.objects.get(user = request.user)
     vendor = vendor_table.objects.filter(user = request.user)
     acnt = Chart_of_Account.objects.filter(user = request.user)
+    acnt_type = Chart_of_Account.objects.filter(user = request.user).values('account_type').distinct()
     cust = customer.objects.filter(user = request.user)
     item = AddItem.objects.filter(user = request.user)
     payments = payment_terms.objects.filter(user = request.user)
     units = Unit.objects.all()
     sales=Sales.objects.all()
     purchase=Purchase.objects.all()
+    
     sales_type = set(Sales.objects.values_list('Account_type', flat=True))
     purchase_type = set(Purchase.objects.values_list('Account_type', flat=True))
     recur_bills = recurring_bills.objects.get(user = request.user,id=id)
-    recur_item = recurring_bills_items.objects.filter(user = request.user,recur_bills = id)    
-    c = customer.objects.filter(user = request.user).get(customerName = recur_bills.customer_name)
-    v = vendor_table.objects.filter(user = request.user).get(first_name = recur_bills.vendor_name.split(" ")[0], last_name = recur_bills.vendor_name.split(" ")[1])
-    # print(recur_bills.vendor_name.split(" "))
+    recur_item = recurring_bills_items.objects.filter(user = request.user,recur_bills = id)   
+
+    c = customer.objects.filter(user = request.user).get(id = recur_bills.customer_name.split(' ')[0])
+    v = vendor_table.objects.filter(user = request.user).get(id = recur_bills.vendor_name.split(" ")[0])
+    # print(recur_bills.customer_name.split(" ")[2:])
     context = {
         'company' : company,
         'vendor' : vendor,
         'account': acnt,
+        'account_type' : acnt_type,
         'customer' : cust,
         'item' : item,
         'payments' :payments,
@@ -3255,6 +3317,8 @@ def edit_recurring_bills(request,id):
         'recur_items' : recur_item,
         'cust':c,
         'vend' : v,
+        'vend_name' : " ".join(recur_bills.vendor_name.split(" ")[1:]),
+        'cust_name' : " ".join(recur_bills.customer_name.split(" ")[2:])
     }
 
     return render(request,'edit_recurring_bills.html',context)
@@ -3268,8 +3332,8 @@ def change_recurring_bills(request,id):
 
     if request.method == 'POST':
         
-        r_bill.vendor_name = request.POST.get('vendor').rsplit(' ', 1)[0]
-        r_bill.customer_name= " ".join(request.POST.get('customer').split(" ")[1:])
+        r_bill.vendor_name = request.POST.get('vendor')
+        r_bill.customer_name= request.POST.get('customer')
         r_bill.profile_name = request.POST['prof_name']
         r_bill.source_supply=request.POST['srcofsupply']
         r_bill.repeat_every=request.POST['repeat']
@@ -3277,7 +3341,6 @@ def change_recurring_bills(request,id):
         r_bill.end_date=None if request.POST.get('end_date') == "" else  request.POST.get('end_date')
         r_bill.payment_terms=request.POST['terms']
         r_bill.note=request.POST['note']
-        # r_bill.document=request.POST.get('file')
         r_bill.sub_total=None if request.POST.get('subtotal') == "" else  request.POST.get('subtotal')
         r_bill.igst=None if request.POST.get('igst') == "" else  request.POST.get('igst')
         r_bill.cgst=None if request.POST.get('cgst') == "" else  request.POST.get('cgst')
@@ -3296,7 +3359,7 @@ def change_recurring_bills(request,id):
         accounts = request.POST.getlist("account[]")
         quantity = request.POST.getlist("quantity[]")
         rate = request.POST.getlist("rate[]")
-        if cust.state == company.state:
+        if request.POST['srcofsupply'] == company.state:
             tax = request.POST.getlist("tax1[]")
         else:
             tax = request.POST.getlist("tax2[]")
@@ -3363,11 +3426,11 @@ def view_recurring_bills(request,id):
     bills = recurring_bills.objects.filter(user = request.user)
     rbill=recurring_bills.objects.get(user = request.user, id= id)
     billitem = recurring_bills_items.objects.filter(user = request.user,recur_bills=id)
-
+    print(rbill.customer_name.split(" ")[1:])
     comp_state = company.state
-    cust = customer.objects.get(customerName = rbill.customer_name)
+    cust = customer.objects.get(id = rbill.customer_name.split(" ")[0])
 
-    gst_or_igst = "GST" if comp_state == cust.placeofsupply else "IGST"
+    gst_or_igst = "GST" if comp_state == rbill.source_supply else "IGST"
 
 
     tax_total = 0 
@@ -3568,10 +3631,10 @@ def get_vendordet(request):
 
     company= company_details.objects.get(user = request.user)
 
-    fname = request.POST.get('fname')
-    lname = request.POST.get('lname')
+    # fname = request.POST.get('fname')
+    # lname = request.POST.get('lname')
     id = request.POST.get('id')
-    vdr = vendor_table.objects.get(user=company.user_id,first_name = fname,last_name = lname,id=id)
+    vdr = vendor_table.objects.get(user=company.user_id, id=id)
     vemail = vdr.vendor_email
     gstnum = vdr.gst_number
     gsttr = vdr.gst_treatment
@@ -3587,11 +3650,13 @@ def get_customerdet(request):
     id = request.POST.get('id')
     # print(name)
 
-    cust = customer.objects.get(user=company.user_id,id = id, customerName=name.strip())
+    cust = customer.objects.get(user=company.user_id,id= id)
     email = cust.customerEmail
     gstin = 0
     gsttr = cust.GSTTreatment
     cstate = cust.placeofsupply.split("] ")[1:]
+    print(email)
+    print(gstin)
     state = 'Not Specified' if cstate == "" else cstate
 
     return JsonResponse({'customer_email' :email, 'gst_treatment':gsttr, 'gstin': gstin , 'state' : state},safe=False)
@@ -3656,8 +3721,8 @@ def vendor_dropdown(request):
     options = {}
     option_objects = vendor_table.objects.filter(user = user)
     for option in option_objects:
+        
         options[option.id] = [option.salutation, option.first_name, option.last_name, option.id]
-
     return JsonResponse(options)
 
 
@@ -3898,7 +3963,7 @@ def get_cust_state(request):
     
 @login_required(login_url='login')
 def export_pdf(request, id):
-    
+
     company = company_details.objects.get(user=request.user)
     bills = recurring_bills.objects.filter(user=request.user)
     rbill = recurring_bills.objects.get(user=request.user, id=id)

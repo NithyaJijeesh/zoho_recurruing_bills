@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
 <style>
@@ -107,18 +108,18 @@
         </div>
         <div class="col-md-6">
           <select name="vendor" id="vendor" class="form-control text-dark bg-light" >
-            <option value="{{recur_bills.vendor_name}} {{vend.id}}" selected class="text-dark bg-light">{{recur_bills.vendor_name}}</option>
+            <option value="{{recur_bills.vendor_name}}" selected class="text-dark bg-light">{{vend_name}}</option>
 
             <div class="dropdown-divider"></div>
             {% for v in vendor %}
-            <option value="{{ v.first_name }} {{ v.last_name }} {{v.id}}">{{ v.first_name }} {{ v.last_name }}</option>
+            <option value="{{v.id}} {{ v.first_name }} {{ v.last_name }}">{{ v.first_name }} {{ v.last_name }}</option>
             {% endfor %}
           </select>
           <a href="" data-toggle="modal" data-target="#newvendor">+ Add New Vendor</a>
         </div>
       </div>
 
-      <div class="row mt-2 d-none" id="email_row">
+      <div class="row mt-2" id="email_row">
         <div class="col-md-3">
           <label for="email_inp">Vendor Email</label>
         </div>
@@ -127,7 +128,7 @@
         </div>
       </div>
 
-      <div class="row mt-2 d-none" id="gst_trt_row">
+      <div class="row mt-2" id="gst_trt_row">
         <div class="col-md-3">
           <label for="gst_trt_inp">GST Treatment</label>
         </div>
@@ -136,7 +137,7 @@
         </div>
       </div>
 
-      <div class="row mt-2 mb-2 d-none" id="gstin_row">
+      <div class="row mt-2 mb-2" id="gstin_row">
         <div class="col-md-3">
           <label for="gstin_inp">GST Number</label>
         </div>
@@ -152,7 +153,7 @@
 
         <div class="col-md-6">
             <select name="srcofsupply" id="srcofsupply" class="form-control text-dark bg-light">
-                <option value="{{recur_bill.source_supply}}" selected>{{recur_bill.source_supply}}</option>    
+                <option value="{{recur_bills.source_supply}}" selected>{{recur_bills.source_supply}}</option>    
 
                 <option value="[AN] Andaman and Nicobar Islads">[AN] Andaman and Nicobar Islads</option>
                 <option value="[AD] Andhra Predhesh">[AD] Andhra Predhesh</option>
@@ -171,7 +172,7 @@
                 <option value="[JK] Jammu and Kashmir">[JK] Jammu and Kashmir</option>
                 <option value="[JH] Jharkhand">[JH] Jharkhand</option>
                 <option value="[KA] Karnataka">[KA] Karnataka</option>
-                <option selected="selected" value="[KL] Kerala">[KL] Kerala</option>
+                <option value="[KL] Kerala">[KL] Kerala</option>
                 <option value="[LA] Ladakh">[LA] Ladakh</option>
                 <option value="[LD] Lakshadweep">[LD] Lakshadweep</option>
                 <option value="[MP] Madhya Predesh">[MP] Madhya Predesh</option>
@@ -298,9 +299,10 @@
         </div>
         <div class="col-md-6">
           <select name="customer" id="customer" class="form-control text-dark bg-light">
-            <option value=" {{recur_bills.customer_name}}" selected class="text-dark bg-light">{{recur_bills.customer_name}}</option>    
+            <option value="{{recur_bills.customer_name}}" selected class="text-dark bg-light">{{cust_name}}</option>    
             {% for c in customer %}
-            <option value=" {{ c.customerName }}">{{ c.customerName }}</option>
+            
+            <option value="{{c.id}} {{ c.customerName }}">{{ c.customerName }}</option>
             {% endfor %}
           </select>
           <a href="" data-toggle="modal" data-target="#newcustomer">+ Add New Customer</a>
@@ -311,7 +313,7 @@
         </div>
       </div>
 
-      <div class="row mt-2 d-none" id="cemail_row">
+      <div class="row mt-2" id="cemail_row">
         <div class="col-md-3">
           <label for="cemail_inp">Customer Email</label>
         </div>
@@ -320,7 +322,7 @@
         </div>
       </div>
 
-      <div class="row mt-2 d-none" id="cgst_trt_row">
+      <div class="row mt-2" id="cgst_trt_row">
         <div class="col-md-3">
           <label for="gst_trt_inp">GST Treatment</label>
         </div>
@@ -329,7 +331,7 @@
         </div>
       </div>
 
-      <div class="row mt-2 mb-2 d-none" id="cgstin_row">
+      <div class="row mt-2 mb-2" id="cgstin_row">
         <div class="col-md-3">
           <label for="gstin_inp">GST Number</label>
         </div>
@@ -363,7 +365,7 @@
                 <td style="width: 20%;">
                   <div class="d-flex">
                     <select name='item[]' id="item{{forloop.counter0}}" class="form-control item text-dark bg-light" onchange = "showRate(this.id,this.value);">
-                      <option value=" {{ri.item }}" selected >{{ ri.item }}</option>
+                      <option value=" {{ ri.item }}" selected >{{ ri.item }}</option>
                       {% for i in item %}
                         <option value="{{i.id}}">{{ i.Name  }} </option>
                       {% endfor %}
@@ -374,6 +376,7 @@
                 <td  style="width: 20%;">
                   <div class="d-flex">
                     <select name='account[]' id="account{{forloop.counter0}}" class="form-control acnt text-dark bg-light">
+                      <option value=" {{ri.account}}" selected >{{ ri.account }}</option>
                       <optgroup class=""label="Accounts Payable">
                         <option value='Accounts Payable'>Accounts Payable</option>
                       </optgroup>
@@ -509,7 +512,7 @@
                   <input type="text" name='qty[]' placeholder='Qty' id="qty{{forloop.counter0}}" value=" {{ri.quantity}} "  class="form-control qty text-dark bg-light" step=0 min=0/>
                 </td>
                 <td style="width: 10%;">
-                  <input type="text" name='rate[]' id="rate{{forloop.counter0}}" placeholder='Rate' value=" {{ ri.rate }} " class="form-control rate text-dark bg-light" />
+                  <input type="text" name='rate[]' id="rate{{forloop.counter0}}" placeholder='Rate' value=" {{ ri.rate }} " class="form-control rate text-dark bg-light" step="0.00" min="0" />
                 </td>
                 <td style="width: 15%;">
                   <input type="hidden" id="tax_total0" class="form-control mb-2 d-none">
@@ -525,7 +528,8 @@
                   </select>
 
                   <select name="tax[]" id="inter_tax0" class="form-control tax2 d-none mb-2 text-dark bg-light">
-                    <option id="ta1" value="{{ ri.tax  }} " text={{ cmp1.state }}>{{ ri.tax }}% IGST({{ ri.tax }}%) </option>                      <option value=28 text=" ">28.0% IGST(28%)</option>
+                    <option id="ta1" value="{{ ri.tax  }} " text={{ cmp1.state }}>{{ ri.tax }}% IGST({{ ri.tax }}%) </option>                      
+                    <option value=28 text=" ">28.0% IGST(28%)</option>
                     <option value=28 text=" ">28.0% IGST(28%)</option>
                     <option value=18 text=" ">18.0% IGST(18%)</option>
                     <option value=12 text=" ">12.0% IGST(12%)</option>
@@ -536,7 +540,7 @@
                 </td>
                 
                 <td style="width: 11%;">
-                  <input type="text" name='discount[]' id="disc{{forloop.counter}}" value=" {{ri.discount}} " placeholder='Discount' class="text-dark bg-light form-control disc"/>
+                  <input type="text" name='discount[]' id="disc{{forloop.counter}}" value=" {{ri.discount}} " placeholder='Discount' class="text-dark bg-light form-control disc" step="0.00" min="0"/>
                 </td>
 
                 <td style="width: 11%;">
@@ -586,7 +590,7 @@
             </div>
             <div class="col-sm-3 mt-2"></div>
             <div class="col-sm-4 mt-2">
-              <input type="number" step="any" name='subtotal' placeholder=0 value="{{recur_bills.sub_total}}"
+              <input type="number" step="any" name='subtotal' placeholder=0 value="{{recur_bills.sub_total}}" step="0.00" min="0"
                 class="form-control text-dark bg-light" id="subtotal" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;">
             </div>
           </div>
@@ -594,21 +598,21 @@
           <div class="row container-fluid p-2 m-0 d-none" id="igst1">
             <div class="col-sm-5 mt-2"><label for="a" class="text-center">IGST</label></div>
             <div class="col-sm-3 mt-2"></div>
-            <div class="col-sm-4 mt-2"><input type="number" name='igst' step="any" id="igst" placeholder=0 value="{{recur_bills.igst}}"
+            <div class="col-sm-4 mt-2"><input type="number" name='igst'  step="0.00" min="0" id="igst" placeholder=0 value="{{recur_bills.igst}}"
                 class="form-control text-dark bg-light" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;"/>
             </div>
           </div>
           <div class="row container-fluid p-2 m-0 d-none" id="cgst1">
             <div class="col-sm-5 mt-2"><label for="a" class="text-center">CGST</label></div>
             <div class="col-sm-3 mt-2"></div>
-            <div class="col-sm-4 mt-2"><input type="number" name='cgst' step="any" id="cgst" placeholder=0 value="{{recur_bills.cgst}}"
+            <div class="col-sm-4 mt-2"><input type="number" name='cgst' step="0.00" min="0" id="cgst" placeholder=0 value="{{recur_bills.cgst}}"
                 class="form-control text-dark bg-light" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;"/>
             </div>
           </div>
           <div class="row container-fluid p-2 m-0 d-none" id="sgst1">
             <div class="col-sm-5 mt-2"><label for="a" class="text-center">SGST</label></div>
             <div class="col-sm-3 mt-2"></div>
-            <div class="col-sm-4 mt-2"><input type="number" name='sgst' step="any" id="sgst" placeholder=0 value="{{recur_bills.sgst}}"
+            <div class="col-sm-4 mt-2"><input type="number" name='sgst' tep="0.00" min="0" id="sgst" placeholder=0 value="{{recur_bills.sgst}}"
                 class="form-control text-dark bg-light" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;"/>
             </div>
           </div>
@@ -620,7 +624,7 @@
             <div class="col-sm-3 mt-2">
             </div>
             <div class="col-sm-4 mt-2">
-              <input type="number" name='addcharge' step="any" id="addcharge" placeholder=0 value="{{recur_bills.shipping_charge}}"
+              <input type="number" name='addcharge' step="any" id="addcharge" placeholder=0 value="{{recur_bills.shipping_charge}}" step="0.00" min="0"
               class="form-control text-dark bg-light"/>
             </div>
           </div>
@@ -637,7 +641,7 @@
           <div class="row container-fluid  p-2 m-0">
             <div class="col-sm-5 mt-2"><label for="a" class="text-center " id="grandtotallbl">Grand Total</label></div>
             <div class="col-sm-2 mt-2"></div>
-            <div class="col-sm-5 mt-2"><input type="number" name='grand_total' id="grandtotal" placeholder="0" step="any" 
+            <div class="col-sm-5 mt-2"><input type="number" name='grand_total' id="grandtotal" placeholder="0" tep="0.00" min="0" 
                 value="{{recur_bills.grand_total}}"class="form-control text-dark bg-light" readonly>
             </div>
           </div>
@@ -2212,32 +2216,59 @@ document.getElementById("cancelButton").addEventListener("click", function() {
       });
   });
 
+  $(document).ready(function() {
 
-  
-$(document).ready(function() {
-    $('#vendor').change(function() {
         var name = $("#vendor").val();
-        var na = name.split(' ')
+        var na = name.split(' ')[0];
         $.ajax({
 
             url: "{% url 'get_vendordet' %}", 
 
             data: { 
-                    fname : na[0],
-                    lname : na[1],
-                    id :na[2],
+                    // fname : na[0],
+                    // lname : na[1],
+                    id :na,
                     csrfmiddlewaretoken: '{{ csrf_token }}' 
                 },
 
             type : 'POST',
 
             success: function(data) {
-                $("#email_row").removeClass('d-none');
-                $("#email_row").addClass('d-flex');
-                $("#gstin_row").removeClass('d-none');
-                $("#gstin_row").addClass('d-flex');
-                $("#gst_trt_row").removeClass('d-none');
-                $("#gst_trt_row").addClass('d-flex');
+
+                $('#email_inp').val(" " +data.vendor_email);
+                $('#gstin_inp').val(" " +data.gst_number);
+                $('#gst_trt_inp').val(" "+data.gst_treatment);
+
+            }
+        });
+
+});
+  
+$(document).ready(function() {
+    $('#vendor').change(function() {
+      var name = $("#vendor").val();
+        var na = name.split(' ')[0];
+        // console.log(name);
+        $.ajax({
+
+            url: "{% url 'get_vendordet' %}", 
+
+            data: { 
+                    // fname : na[0],
+                    // lname : na[1],
+                    id :na,
+                    csrfmiddlewaretoken: '{{ csrf_token }}' 
+                },
+
+            type : 'POST',
+
+            success: function(data) {
+                // $("#email_row").removeClass('d-none');
+                // $("#email_row").addClass('d-flex');
+                // $("#gstin_row").removeClass('d-none');
+                // $("#gstin_row").addClass('d-flex');
+                // $("#gst_trt_row").removeClass('d-none');
+                // $("#gst_trt_row").addClass('d-flex');
 
                 $('#email_inp').val(" " +data.vendor_email);
                 $('#gstin_inp').val(" " +data.gst_number);
@@ -2250,17 +2281,76 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-    $('#customer').change(function() {
 
         var name = $("#customer").val();
-        var na = name.split(' ')
+        var na = name.split(' ')[0];
         $.ajax({
 
             url: "{% url 'get_customerdet' %}", 
 
             data: { 
-                    name : na[1]+ " " + na[2] + " "+ na[3],
-                    id : na[0],
+                    // name : na[1]+ " " + na[2] + " "+ na[3],
+                    id : na,
+                    csrfmiddlewaretoken: '{{ csrf_token }}' 
+                },
+
+            type : 'POST',
+
+            success: function(data) {
+              console.log('na');
+              // $("#cemail_row").removeClass('d-none');
+              // $("#cemail_row").addClass('d-flex');
+              
+              // $("#cgst_trt_row").removeClass('d-none');
+              // $("#cgst_trt_row").addClass('d-flex');
+              $('#cemail_inp').val(' '+ data.customer_email);
+              $('#cgst_trt_inp').val(' ' +data.gst_treatment);
+
+              if( data.gst_treatment == 'Registered Business-Regular Business that is registered under GST'){
+                // $("#cgstin_row").removeClass('d-none');
+                // $("#cgstin_row").addClass('d-flex');
+                $('#cgstin_inp').val(' '+ data.gstin);
+
+              }
+              else if( data.gst_treatment == 'Registered Business-Composition Business that is registered under the Composition scheme in GST'){
+                // $("#cgstin_row").removeClass('d-none');
+                // $("#cgstin_row").addClass('d-flex');
+                $('#cgstin_inp').val(' '+ data.gstin);
+              }
+              else if( data.gst_treatment == 'Overseas- Persons with who you do import or exports of supplies outside india'){
+                // $("#cgstin_row").removeClass('d-none');
+                // $("#cgstin_row").addClass('d-flex');
+                $('#cgstin_inp').val(' '+ data.gstin);
+              }
+              
+              else{
+                $("#cgstin_row").addClass('d-none');
+              }
+
+                // gst or igst in tax
+
+              $("#cust_state").val(data.state);
+              
+            }
+            
+        });
+
+});
+
+
+$(document).ready(function() {
+    $('#customer').change(function() {
+
+        var name = $("#customer").val();
+        var na = name.split(' ')[0];
+        console.log(na);
+        $.ajax({
+
+            url: "{% url 'get_customerdet' %}", 
+
+            data: { 
+                    // name : na[1]+ " " + na[2] + " "+ na[3],
+                    id : na,
                     csrfmiddlewaretoken: '{{ csrf_token }}' 
                 },
 
@@ -2268,28 +2358,28 @@ $(document).ready(function() {
 
             success: function(data) {
 
-              $("#cemail_row").removeClass('d-none');
-              $("#cemail_row").addClass('d-flex');
+              // $("#cemail_row").removeClass('d-none');
+              // $("#cemail_row").addClass('d-flex');
               
-              $("#cgst_trt_row").removeClass('d-none');
-              $("#cgst_trt_row").addClass('d-flex');
+              // $("#cgst_trt_row").removeClass('d-none');
+              // $("#cgst_trt_row").addClass('d-flex');
               $('#cemail_inp').val(' '+ data.customer_email);
               $('#cgst_trt_inp').val(' ' +data.gst_treatment);
 
               if( data.gst_treatment == 'Registered Business-Regular Business that is registered under GST'){
-                $("#cgstin_row").removeClass('d-none');
-                $("#cgstin_row").addClass('d-flex');
+                // $("#cgstin_row").removeClass('d-none');
+                // $("#cgstin_row").addClass('d-flex');
                 $('#cgstin_inp').val(' '+ data.gstin);
 
               }
               else if( data.gst_treatment == 'Registered Business-Composition Business that is registered under the Composition scheme in GST'){
-                $("#cgstin_row").removeClass('d-none');
-                $("#cgstin_row").addClass('d-flex');
+                // $("#cgstin_row").removeClass('d-none');
+                // $("#cgstin_row").addClass('d-flex');
                 $('#cgstin_inp').val(' '+ data.gstin);
               }
               else if( data.gst_treatment == 'Overseas- Persons with who you do import or exports of supplies outside india'){
-                $("#cgstin_row").removeClass('d-none');
-                $("#cgstin_row").addClass('d-flex');
+                // $("#cgstin_row").removeClass('d-none');
+                // $("#cgstin_row").addClass('d-flex');
                 $('#cgstin_inp').val(' '+ data.gstin);
               }
               
@@ -2945,7 +3035,7 @@ function reloadVendor() {
       var dropdown = $('#vendor');
       dropdown.empty();
       $.each(data, function(key, value) {
-          dropdown.append($('<option></option>').attr('value', key).text(value[0]+" " +value[1] + ' ' + value[2]).val(value[1] + ' ' + value[2]+ ' ' +value[3]));
+          dropdown.append($('<option></option>').attr('value', key).text(value[0]+" " +value[1] + ' ' + value[2]).val(value[3] + ' ' +value[1] + ' ' + value[2]+ ' ' +value[3]));
       });
     },
     error: function(xhr, status, error) {
@@ -3408,9 +3498,6 @@ function reloadAccount() {
 }
 
 
-
-
-
 $(document).ready(function() {
   $("#item0").change(function() {
     $.ajax({
@@ -3453,16 +3540,75 @@ $(document).ready(function() {
 
   $(document).on('change', '#srcofsupply',function(){
 
-    $(".selecttax").removeClass('d-none');
-    $(".selecttax").addClass('d-flex');
-    var st = $("#srcofsupply").val().slice(4).trim();
+  $(".selecttax").removeClass('d-none');
+  $(".selecttax").addClass('d-flex');
+  var st = $("#srcofsupply").val().split(" ").slice(1).join(" ").trim();
+  console.log(st)
+  if( st == $("#company_state").val())
+  {
+    $(".tax2").removeClass('d-flex');
+    $(".tax2").addClass('d-none');
+    $(".tax1").removeClass('d-flex');
+    $(".tax1").addClass('d-none');
 
+    $("#cgst1").removeClass('d-none');
+    $("#cgst1").addClass('d-flex');
+    $("#sgst1").removeClass('d-none');
+    $("#sgst1").addClass('d-flex');
+
+    $("#igst1").removeClass('d-flex');
+    $("#igst1").addClass('d-none');
+
+  }
+  else{
+    $(".tax1").removeClass('d-flex');
+    $(".tax1").addClass('d-none');
+    $(".tax2").removeClass('d-flex');
+    $(".tax2").addClass('d-none');
+
+    $("#igst1").removeClass('d-none');
+    $("#igst1").addClass('d-flex');
+
+    $("#cgst1").removeClass('d-flex');
+    $("#cgst1").addClass('d-none');
+    $("#sgst1").removeClass('d-flex');
+    $("#sgst1").addClass('d-none');
+  }
+});
+
+$(document).on("click",".selecttax",function(){
+
+  $(".selecttax").removeClass('d-flex');
+  $(".selecttax").addClass('d-none');
+  var st = $("#srcofsupply").val().split(" ").slice(1).join(" ").trim();
+
+  if(st == $("#company_state").val()){
+  $(".tax2").addClass('d-none');
+  $(".tax1").removeClass('d-none');
+  $(".tax1").addClass('d-flex');
+
+  }
+  else{
+  $(".tax1").addClass('d-none');
+  $(".tax2").removeClass('d-none');
+  $(".tax2").addClass('d-flex');
+  }
+
+});
+
+
+  $(document).ready(function(){
+
+    $(".selecttax").removeClass('d-flex');
+    $(".selecttax").addClass('d-none');
+    var st = $("#srcofsupply").val().split(" ").slice(1).join(" ").trim();
+    console.log(st == $("#company_state").val())
     if( st == $("#company_state").val())
     {
       $(".tax2").removeClass('d-flex');
       $(".tax2").addClass('d-none');
-      $(".tax1").removeClass('d-flex');
-      $(".tax1").addClass('d-none');
+      $(".tax1").removeClass('d-none');
+      $(".tax1").addClass('d-flex');
 
       $("#cgst1").removeClass('d-none');
       $("#cgst1").addClass('d-flex');
@@ -3476,8 +3622,8 @@ $(document).ready(function() {
     else{
       $(".tax1").removeClass('d-flex');
       $(".tax1").addClass('d-none');
-      $(".tax2").removeClass('d-flex');
-      $(".tax2").addClass('d-none');
+      $(".tax2").removeClass('d-none');
+      $(".tax2").addClass('d-flex');
 
       $("#igst1").removeClass('d-none');
       $("#igst1").addClass('d-flex');
@@ -3488,30 +3634,6 @@ $(document).ready(function() {
       $("#sgst1").addClass('d-none');
     }
   });
-
-  $(document).on("click",".selecttax",function(){
-
-    $(".selecttax").removeClass('d-flex');
-    $(".selecttax").addClass('d-none');
-    var sta = $("#srcofsupply").val().slice(4).trim();
-
-    if(sta == $("#company_state").val()){
-    $(".tax2").addClass('d-none');
-    $(".tax1").removeClass('d-none');
-    $(".tax1").addClass('d-flex');
-
-    }
-    else{
-    $(".tax1").addClass('d-none');
-    $(".tax2").removeClass('d-none');
-    $(".tax2").addClass('d-flex');
-    }
-
-  });
-
-
-
-
     
   $(document).on('change','.qty',function(){
 

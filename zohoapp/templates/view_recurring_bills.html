@@ -96,11 +96,7 @@
         border: none;
     }
 
-    /* .tab a:hover {
-        background-color: #ddd;
-        color: rgb(56, 54, 54);
-    } */
-
+    
     .tab a.active {
         background-color: #ccc;
         color: rgb(56, 54, 54);
@@ -243,6 +239,11 @@
         font-weight:700;
         font-family:Georgia, 'Times New Roman', Times, serif
     }
+    .print-only h5{
+        color: black;
+        font-weight:700;
+        font-family:Georgia, 'Times New Roman', Times, serif
+    }
     .print-only thead td{
         color: black;
         font-weight:700;
@@ -325,15 +326,6 @@
                                 </div>
                             </div>
 
-                            <!-- <div class="px-0 my-2 mx-1 input-group ">
-                                <label style="color: azure; font-size: 18px;" class="mx-3 text-capitalize pname">{{b.profile_name}} </label>
-                                <label style="color: rgb(129, 126, 126); font-size: 15px;margin-left: 50px;">₹ {{ b.grand_total|floatformat:2 }} </label>
-                            </div>
-                            <div class="px-3 my-4 mx-1 input-group " style="margin-left: 0px;">
-                                <label style="color: rgb(129, 126, 126); font-size: 15px;" class="mx-4"># {{ b.id }} </label>
-                                <span  style="color: rgb(129, 126, 126);">|</span>
-                                <label style="color: rgb(129, 126, 126); font-size: 15px; "class="mx-2"> {{ b.start_date }} </label>
-                            </div> -->
                         </a> 
                     {% endfor %}
                 </div>
@@ -349,7 +341,7 @@
 
                 <div class="d-flex" style="float: right; margin-right: 25px;">
                     <div class="m-0">
-                        <a href="" class=" far fa-comment-alt btns px-2 py-2" title="ADD COMMENTS"
+                        <a href="" class=" far fa-comment-alt btns px-2 py-2" title="COMMENTS"
                             data-toggle="modal" data-target="#cmnts"> </a>
                     </div>
 
@@ -402,7 +394,14 @@
 
 
             <div id="Template" class=" print-only page tabcontent p-5 m-3" style="display: block; background-color:azure">
-                <div class="row extra-info pt-2">
+                <div class="row pt-0 m-0 text-center">
+                    <div class="col-4 "></div>
+                    <div class="col-4 ">
+                        <h4 class="text-uppercase">recurring bills</h4>
+                    </div>
+                    <div class="col-4 "></div>
+                </div>
+                <div class="row extra-info pt-2 mt-3">
                     <div class="col-1 "></div>
                     <div class="col-5 ">
                         <h3 class="text-uppercase" style="color: black;"><b>{{company.company_name }}</b></h3>
@@ -412,17 +411,19 @@
                             {{company.pincode}}<br>
                         </p>                    
                     </div>
-                    <div class="col-6">
-                        <h1 class="text-uppercase">recurring bills</h1>
+                    <div class="col-1 "></div>
+                    <div class="col-5">
+                        
                         <section class="d-flex justify-content-between">
                             <div class="top-right">
-                                <div class="graphic-path">
-                                    <h5 style="color: black;">{{recur_bill.profile_name}}</h5>
+                                <div class="graphic-path text-center">
+                                    <h5 class="text-capitalize">{{recur_bill.profile_name}}</h5>
                                 </div>
-                                <!-- <div class="position-relative">
-                                    <p style="color: black; ">Bill No.#  RB - 
-                                        <span style="font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">{{recur_bill.id }}</span></p>
-                                </div> -->
+                                <div class="position-relative">
+                                    <p>Bill Date : &nbsp <span style="color: black;">{{recur_bill.start_date|date:'d-m-Y'}}</span></p>
+                                    <p>Due Date : &nbsp <span style="color: black;">{{recur_bill.end_date|date:'d-m-Y'}}</span></p>
+                                    <p>Term : &nbsp <span style="color: black;">NET {{recur_bill.payment_terms}}</span></p> 
+                                </div>
                             </div>
                         </section>
 
@@ -437,20 +438,30 @@
                             <div class="col-1 "></div>
                             <div class="col-5">
                                 <p style=" font-size: 18px; font-style: italic; font-weight: 700;">Bill To,</p>
-                                <h5  class="mx-2" style="color: black;">{{customer.customerName}}</h5>
+                                <h5  class="mx-2" style="color: black;">{{cust.customer_name}}</h5>
                                 <p class="address col-6 mx-3 p-2" style="margin-left: -14px;"> {{customer.Address1}}
+                                    <br>
+                                    {{customer.Address2}}<br>
+                                    {{customer.city}}<br>
+                                </p>
+                            </div>
+                            <div class="col-1"></div>
+                            <!-- <div class="col-5 mt-5">
+                                <p>Bill Date : &nbsp <span style="color: black;">{{recur_bill.start_date|date:'d-m-Y'}}</span></p>
+                                <p>Due Date : &nbsp <span style="color: black;">{{recur_bill.end_date|date:'d-m-Y'}}</span></p>
+                                <p>Term : &nbsp <span style="color: black;">NET {{recur_bill.payment_terms}}</span></p>
+
+                            </div> -->
+
+                            <div class="col-5">
+                                <p style=" font-size: 18px; font-style: italic; font-weight: 700;">Deliver To,</p>
+                                <h5  class="mx-2" style="color: black;">{{ vendor.salutation}} {{vendor.first_name}} {{ vendor.last_name}}</h5>
+                                <p class="address col-6 mx-3 p-2" style="margin-left: -14px;"> {{cust.Address1}}
                                     <br>
                                     {{customer.Address2}}<br>
                                     {{customer.city}}<br>
 
                                 </p>
-
-                            </div>
-                            <div class="col-1"></div>
-                            <div class="col-5 mt-5">
-                                <p>Bill Date : &nbsp <span style="color: black;">{{recur_bill.start_date|date:'d-m-Y'}}</span></p>
-                                <p>Due Date : &nbsp <span style="color: black;">{{recur_bill.end_date|date:'d-m-Y'}}</span></p>
-                                <p>Term : &nbsp <span style="color: black;">NET {{recur_bill.payment_terms}}</span></p>
 
                             </div>
                         </div>

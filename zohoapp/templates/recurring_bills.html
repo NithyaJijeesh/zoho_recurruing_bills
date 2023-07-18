@@ -196,8 +196,8 @@
                                 <tr >
                                     <th><a href="{% url 'view_recurring_bills' r.id %}">{{ r.start_date }}</a></th>
                                     <td><a href="{% url 'view_recurring_bills' r.id %}"> {{ r.profile_name }}</a></td>
-                                    <td class="text-capitalize"><a href="{% url 'view_recurring_bills' r.id %}">{{ r.vendor_name }}</a></td>
-                                    <td class="text-capitalize"><a href="{% url 'view_recurring_bills' r.id %}">{{ r.customer_name }}</a></td>
+                                    <td class="text-capitalize"><a href="{% url 'view_recurring_bills' r.id %}">{{ r.vend_name }}</a></td>
+                                    <td class="text-capitalize"><a href="{% url 'view_recurring_bills' r.id %}">{{ r.cust_name }}</a></td>
                                     <td><a href="{% url 'view_recurring_bills' r.id %}">{{ r.grand_total|floatformat:2 }}</a></td>
                                     <td class="text-right">
                                         <a href="{% url 'delete_recurring_bills' r.id %}" 
@@ -235,17 +235,7 @@
                             <i class="fa-sharp fa-solid fa-money-check-dollar" style="color: #3ec61c;"></i> record payment
                         </div>
                     </div>
-                    <div class="flowchart1">
-                        <div class="box">Start</div>
-                        <div class="connector"></div>
-                        <div class="box">Step 1</div>
-                        <div class="connector"></div>
-                        <div class="branch"></div>
-                        <div class="connector"></div>
-                        <div class="box">Step 2</div>
-                        <div class="connector"></div>
-                        <div class="box">End</div>
-                      </div>
+                    
                 </div>
             </div>
         </div>

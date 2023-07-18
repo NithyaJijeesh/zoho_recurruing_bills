@@ -109,7 +109,7 @@
           <select name="vendor" id="vendor" class="form-control text-dark bg-light" >
             <option value="" class="text-dark bg-light"></option>
             {% for v in vendor %}
-            <option value="{{ v.first_name }} {{ v.last_name }} {{v.id}}" class="text-dark bg-light">{{ v.first_name }} {{ v.last_name }}</option>
+            <option value="{{v.id}} {{ v.first_name }} {{ v.last_name }}" class="text-dark bg-light">{{ v.first_name }} {{ v.last_name }}</option>
             {% endfor %}
           </select>
           <a href="" data-toggle="modal" data-target="#newvendor">+ Add New Vendor</a>
@@ -294,7 +294,7 @@
           <select name="customer" id="customer" class="form-control text-dark bg-light" >
             <option value=""></option>
             {% for c in customer %}
-            <option value="{{c.id}} {{ c.customerName }}">{{ c.customerName }}</option>
+            <option value="{{c.id}} {{c.customerName}}">{{ c.customerName }}</option>
             {% endfor %}
           </select>
           <a href="" data-toggle="modal" data-target="#newcustomer">+ Add New Customer</a>
@@ -576,7 +576,7 @@
             </div>
             <div class="col-sm-3 mt-2"></div>
             <div class="col-sm-4 mt-2">
-              <input type="number" step="any" name='subtotal' placeholder=0 
+              <input type="number" step="any" name='subtotal' placeholder=0  step="0.00" min="0"
                 class="form-control text-dark bg-light" id="subtotal" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;">
             </div>
           </div>
@@ -584,21 +584,21 @@
           <div class="row container-fluid p-2 m-0 d-none" id="igst1">
             <div class="col-sm-5 mt-2"><label for="a" class="text-center">IGST</label></div>
             <div class="col-sm-3 mt-2"></div>
-            <div class="col-sm-4 mt-2"><input type="number" name='igst' step="any" id="igst" placeholder=0 
+            <div class="col-sm-4 mt-2"><input type="number" name='igst' step="0.00" min="0" id="igst" placeholder=0 
                 class="form-control text-dark bg-light" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;"/>
             </div>
           </div>
           <div class="row container-fluid p-2 m-0 d-none" id="cgst1">
             <div class="col-sm-5 mt-2"><label for="a" class="text-center">CGST</label></div>
             <div class="col-sm-3 mt-2"></div>
-            <div class="col-sm-4 mt-2"><input type="number" name='cgst' step="any" id="cgst" placeholder=0 
+            <div class="col-sm-4 mt-2"><input type="number" name='cgst' step="0.00" min="0" id="cgst" placeholder=0 
                 class="form-control text-dark bg-light" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;"/>
             </div>
           </div>
           <div class="row container-fluid p-2 m-0 d-none" id="sgst1">
             <div class="col-sm-5 mt-2"><label for="a" class="text-center">SGST</label></div>
             <div class="col-sm-3 mt-2"></div>
-            <div class="col-sm-4 mt-2"><input type="number" name='sgst' step="any" id="sgst" placeholder=0 
+            <div class="col-sm-4 mt-2"><input type="number" name='sgst' step="0.00" min="0" id="sgst" placeholder=0 
                 class="form-control text-dark bg-light" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;"/>
             </div>
           </div>
@@ -610,7 +610,7 @@
             <div class="col-sm-3 mt-2">
             </div>
             <div class="col-sm-4 mt-2">
-              <input type="number" name='addcharge' step="any" id="addcharge" placeholder=0 
+              <input type="number" name='addcharge' tep="0.00" min="0" id="addcharge" placeholder=0 
               class="form-control text-dark bg-light"/>
             </div>
           </div>
@@ -627,7 +627,7 @@
           <div class="row container-fluid  p-2 m-0">
             <div class="col-sm-5 mt-2"><label for="a" class="text-center" id="grandtotallbl">Grand Total</label></div>
             <div class="col-sm-2 mt-2"></div>
-            <div class="col-sm-5 mt-2"><input type="number" name='grand_total' id="grandtotal" placeholder="0" step="any" 
+            <div class="col-sm-5 mt-2"><input type="number" name='grand_total' id="grandtotal" placeholder="0" step="0.00" min="0"
                 class="form-control text-dark bg-light" readonly>
             </div>
           </div>
@@ -2224,15 +2224,16 @@ document.getElementById("cancelButton").addEventListener("click", function() {
 $(document).ready(function() {
     $('#vendor').change(function() {
         var name = $("#vendor").val();
-        var na = name.split(' ')
+        var na = name.split(' ')[0];
+        // console.log(name);
         $.ajax({
 
             url: "{% url 'get_vendordet' %}", 
 
             data: { 
-                    fname : na[0],
-                    lname : na[1],
-                    id :na[2],
+                    // fname : na[0],
+                    // lname : na[1],
+                    id :na,
                     csrfmiddlewaretoken: '{{ csrf_token }}' 
                 },
 
@@ -2260,14 +2261,14 @@ $(document).ready(function() {
     $('#customer').change(function() {
 
         var name = $("#customer").val();
-        var na = name.split(' ')
+        var na = name.split(' ')[0];
         $.ajax({
 
             url: "{% url 'get_customerdet' %}", 
 
             data: { 
-                    name : na[1]+ " " + na[2] + " "+ na[3],
-                    id : na[0],
+                    // name : na[1]+ " " + na[2] + " "+ na[3],
+                    id : na,
                     csrfmiddlewaretoken: '{{ csrf_token }}' 
                 },
 
@@ -2945,7 +2946,7 @@ function reloadVendor() {
       var dropdown = $('#vendor');
       dropdown.empty();
       $.each(data, function(key, value) {
-          dropdown.append($('<option></option>').attr('value', key).text(value[0]+" " +value[1] + ' ' + value[2]).val(value[1] + ' ' + value[2]+ ' ' +value[3]));
+        dropdown.append($('<option></option>').attr('value', key).text(value[0]+" " +value[1] + ' ' + value[2]).val(value[3]+' '+ value[1] + ' ' + value[2]+ ' ' +value[3]));
       });
     },
     error: function(xhr, status, error) {
@@ -3455,8 +3456,8 @@ $(document).ready(function() {
 
       $(".selecttax").removeClass('d-none');
       $(".selecttax").addClass('d-flex');
-      var st = $("#srcofsupply").val().slice(4).trim();
-
+      var st = $("#srcofsupply").val().split(" ").slice(1).join(" ").trim();
+      // console.log(st)
       if( st == $("#company_state").val())
       {
         $(".tax2").removeClass('d-flex');
@@ -3493,9 +3494,9 @@ $(document).ready(function() {
 
     $(".selecttax").removeClass('d-flex');
     $(".selecttax").addClass('d-none');
-    var sta = $("#srcofsupply").val().slice(4).trim();
-
-    if(sta == $("#company_state").val()){
+    var st = $("#srcofsupply").val().split(" ").slice(1).join(" ").trim();
+    console.log(st == $("#company_state").val())
+    if(st == $("#company_state").val()){
       $(".tax2").addClass('d-none');
       $(".tax1").removeClass('d-none');
       $(".tax1").addClass('d-flex');
