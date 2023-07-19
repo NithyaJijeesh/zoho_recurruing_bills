@@ -4,16 +4,12 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/print-js/1.6.0/print.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
-<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"> -->
-
-
+ 
 
 </body>
 
 <style>
+   
     .containerprof {
         min-height: 450px;
         background-size: contain;
@@ -117,11 +113,7 @@
         box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
     }
 
-    .page[size="A4"] {
-        width: 17cm;
-        height: 23cm;
-        overflow: hidden;
-    }
+    
 
     td {
         color: rgba(0, 0, 0, 0.5);
@@ -317,7 +309,7 @@
                             <div class="row mt-3">
                                 <div class="col-md-7">
                                     <label style="color: azure; font-size: 18px;" class="mx-3 text-capitalize text-center pname">{{b.profile_name}} </label><br>
-                                        <label style="color: rgb(129, 126, 126); font-size: 15px;" class="mx-3 px-2"># RB- {{ b.id }} </label>
+                                        <!-- <label style="color: rgb(129, 126, 126); font-size: 15px;" class="mx-3 px-2"># RB- {{ b.id }} </label> -->
                                         <label style="color: rgb(129, 126, 126); font-size: 15px; "class="mx-2 px-2"> {{ b.start_date }} </label>
                                 </div>
                                 <!-- <div class="col-md-1"></div> -->
@@ -355,6 +347,8 @@
                     <div class="mx-1">
                         <a href="{% url 'export_pdf' recur_bill.id %}" class="fa fa-file-pdf btns px-2 py-2"
                             data-toggle="tooltip" title="PDF"></a>
+                        <!-- <a href=" " class="fa fa-file-pdf btns px-2 py-2" id="toPDF"
+                        data-toggle="tooltip" title="PDF"></a> -->
 
                         <a href="" class=" fa fa-print btns px-2 py-2"   data-toggle="tooltip"
                             title="PRINT" onclick="window.print()"> </a>
@@ -431,18 +425,17 @@
                 </div>
 
 
-                <section class="store-user mt-0">
+                <section class="store-user mt-2">
                     <div class="col-12">
                         <div class="row pb-3">
 
                             <div class="col-1 "></div>
                             <div class="col-5">
                                 <p style=" font-size: 18px; font-style: italic; font-weight: 700;">Bill To,</p>
-                                <h5  class="mx-2" style="color: black;">{{cust.customer_name}}</h5>
-                                <p class="address col-6 mx-3 p-2" style="margin-left: -14px;"> {{customer.Address1}}
-                                    <br>
-                                    {{customer.Address2}}<br>
-                                    {{customer.city}}<br>
+                                <h6  class="mx-3 text-capitalize" style="color: black; ">{{ vendor.salutation}} {{vendor.first_name}} {{ vendor.last_name}}</h6>
+                                <p class="address col-6 mx-4 p-2" style="margin-left: -14px;">{{vendor.baddress}}<br>
+                                    {{vendor.bcity}}<br>
+                                    {{vendor.bstate}}<br> 
                                 </p>
                             </div>
                             <div class="col-1"></div>
@@ -455,12 +448,13 @@
 
                             <div class="col-5">
                                 <p style=" font-size: 18px; font-style: italic; font-weight: 700;">Deliver To,</p>
-                                <h5  class="mx-2" style="color: black;">{{ vendor.salutation}} {{vendor.first_name}} {{ vendor.last_name}}</h5>
-                                <p class="address col-6 mx-3 p-2" style="margin-left: -14px;"> {{cust.Address1}}
-                                    <br>
+                                <h6  class="mx-2 text-capitalize" style="color: black;">{{customer.customerName}}</h6>
+                                <p class="address col-6 mx-3 p-2" style="margin-left: -14px;">{{customer.Address1}} <br>
                                     {{customer.Address2}}<br>
                                     {{customer.city}}<br>
+                                    {{customer.state}}<br>
 
+                                    
                                 </p>
 
                             </div>
@@ -908,18 +902,17 @@
     </div>
     
 </div>
-
+<div id="editor"></div>
 <!-- </div> -->
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
-
-<script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/print-js/1.6.0/print.js"></script>
  
 
 
+<script>
     function openTab(evt, tabName) {
         var i, tabcontent, tablinks;
         tabcontent = document.getElementsByClassName("tabcontent");
@@ -1042,6 +1035,7 @@
     });
   });
 });
+
 
 </script>
 

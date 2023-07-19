@@ -184,6 +184,7 @@ urlpatterns = [
     path('get_rate',views.get_rate ,name = 'get_rate'),
     path('get_cust_state',views.get_cust_state,name = "get_cust_state"),
     path('export_pdf/<id>',views.export_pdf,name = "export_pdf"),
+    path('export_pdf1/<id>',views.export_pdf1,name = "export_pdf1"),
     path('recurbill_comment',views.recurbill_comment,name = "recurbill_comment"),
     path('recurbill_add_file/<id>',views.recurbill_add_file,name = "recurbill_add_file"),
     path('recurbill_email/<id>', views.recurbill_email, name='recurbill_email'),

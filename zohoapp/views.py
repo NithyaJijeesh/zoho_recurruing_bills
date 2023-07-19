@@ -17,12 +17,13 @@ from datetime import datetime,date, timedelta
 from xhtml2pdf import pisa
 from django.template.loader import get_template
 from bs4 import BeautifulSoup
-import io
 import os
 from django.template import Context, Template
 import tempfile
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
+from django.template.loader import get_template
+from weasyprint import HTML
 
 
 def index(request):
@@ -3426,10 +3427,10 @@ def view_recurring_bills(request,id):
     bills = recurring_bills.objects.filter(user = request.user)
     rbill=recurring_bills.objects.get(user = request.user, id= id)
     billitem = recurring_bills_items.objects.filter(user = request.user,recur_bills=id)
-    print(rbill.customer_name.split(" ")[1:])
+    # print(rbill.customer_name.split(" ")[1:])
     comp_state = company.state
     cust = customer.objects.get(id = rbill.customer_name.split(" ")[0])
-
+    vend = vendor_table.objects.get(id = rbill.vendor_name.split(" ")[0])
     gst_or_igst = "GST" if comp_state == rbill.source_supply else "IGST"
 
 
@@ -3445,6 +3446,7 @@ def view_recurring_bills(request,id):
                 'tax' : tax_total,
                 "gst_or_igst" : gst_or_igst,
                 'customer' : cust,
+                'vendor' : vend,
             }
 
     return render(request, 'view_recurring_bills.html',context)
@@ -3461,7 +3463,13 @@ def view_custasc(request,id):
     comp_state = company.state
     cust = customer.objects.get(customerName = rbill.customer_name)
 
-    gst_or_igst = "GST" if comp_state == cust.placeofsupply else "IGST"
+    gst_or_igst = "GST" if comp_state == rbill.source_supply else "IGST"
+
+
+    comp_state = company.state
+    cust = customer.objects.get(id = rbill.customer_name.split(" ")[0])
+    vend = vendor_table.objects.get(id = rbill.vendor_name.split(" ")[0])
+    gst_or_igst = "GST" if comp_state == rbill.source_supply else "IGST"
 
 
     tax_total = 0 
@@ -3476,6 +3484,7 @@ def view_custasc(request,id):
                 'tax' : tax_total,
                 "gst_or_igst" : gst_or_igst,
                 'customer' : cust,
+                'vendor' : vend,
             }
     return render(request,'view_recurring_bills.html',context)
 
@@ -3488,9 +3497,9 @@ def view_custdesc(request,id):
     billitem = recurring_bills_items.objects.filter(user = request.user,recur_bills=id)
 
     comp_state = company.state
-    cust = customer.objects.get(customerName = rbill.customer_name)
-
-    gst_or_igst = "GST" if comp_state == cust.placeofsupply else "IGST"
+    cust = customer.objects.get(id = rbill.customer_name.split(" ")[0])
+    vend = vendor_table.objects.get(id = rbill.vendor_name.split(" ")[0])
+    gst_or_igst = "GST" if comp_state == rbill.source_supply else "IGST"
 
 
     tax_total = 0 
@@ -3505,6 +3514,7 @@ def view_custdesc(request,id):
                 'tax' : tax_total,
                 "gst_or_igst" : gst_or_igst,
                 'customer' : cust,
+                'vendor' : vend,
             }
     return render(request,'view_recurring_bills.html',context)
 
@@ -3517,9 +3527,9 @@ def view_vendorasc(request,id):
     billitem = recurring_bills_items.objects.filter(user = request.user,recur_bills=id)
 
     comp_state = company.state
-    cust = customer.objects.get(customerName = rbill.customer_name)
-
-    gst_or_igst = "GST" if comp_state == cust.placeofsupply else "IGST"
+    cust = customer.objects.get(id = rbill.customer_name.split(" ")[0])
+    vend = vendor_table.objects.get(id = rbill.vendor_name.split(" ")[0])
+    gst_or_igst = "GST" if comp_state == rbill.source_supply else "IGST"
 
 
     tax_total = 0 
@@ -3534,6 +3544,7 @@ def view_vendorasc(request,id):
                 'tax' : tax_total,
                 "gst_or_igst" : gst_or_igst,
                 'customer' : cust,
+                'vendor' : vend,
             }
     return render(request,'view_recurring_bills.html',context)
 
@@ -3546,9 +3557,9 @@ def view_vendordesc(request,id):
     billitem = recurring_bills_items.objects.filter(user = request.user,recur_bills=id)
 
     comp_state = company.state
-    cust = customer.objects.get(customerName = rbill.customer_name)
-
-    gst_or_igst = "GST" if comp_state == cust.placeofsupply else "IGST"
+    cust = customer.objects.get(id = rbill.customer_name.split(" ")[0])
+    vend = vendor_table.objects.get(id = rbill.vendor_name.split(" ")[0])
+    gst_or_igst = "GST" if comp_state == rbill.source_supply else "IGST"
 
 
     tax_total = 0 
@@ -3563,6 +3574,7 @@ def view_vendordesc(request,id):
                 'tax' : tax_total,
                 "gst_or_igst" : gst_or_igst,
                 'customer' : cust,
+                'vendor' : vend,
             }
     return render(request,'view_recurring_bills.html',context)
 
@@ -3575,9 +3587,9 @@ def view_profileasc(request,id):
     billitem = recurring_bills_items.objects.filter(user = request.user,recur_bills=id)
 
     comp_state = company.state
-    cust = customer.objects.get(customerName = rbill.customer_name)
-
-    gst_or_igst = "GST" if comp_state == cust.placeofsupply else "IGST"
+    cust = customer.objects.get(id = rbill.customer_name.split(" ")[0])
+    vend = vendor_table.objects.get(id = rbill.vendor_name.split(" ")[0])
+    gst_or_igst = "GST" if comp_state == rbill.source_supply else "IGST"
 
 
     tax_total = 0 
@@ -3592,6 +3604,7 @@ def view_profileasc(request,id):
                 'tax' : tax_total,
                 "gst_or_igst" : gst_or_igst,
                 'customer' : cust,
+                'vendor' : vend,
             }
     return render(request,'view_recurring_bills.html',context)
 
@@ -3607,7 +3620,7 @@ def view_profiledesc(request,id):
     comp_state = company.state
     cust = customer.objects.get(customerName = rbill.customer_name)
 
-    gst_or_igst = "GST" if comp_state == cust.placeofsupply else "IGST"
+    gst_or_igst = "GST" if comp_state == rbill.source_supplysupply else "IGST"
 
 
     tax_total = 0 
@@ -3961,18 +3974,20 @@ def get_cust_state(request):
 
         return JsonResponse({"state": state},safe=False)
     
-@login_required(login_url='login')
-def export_pdf(request, id):
 
+
+@login_required(login_url='login')
+def export_pdf1(request, id):
     company = company_details.objects.get(user=request.user)
     bills = recurring_bills.objects.filter(user=request.user)
     rbill = recurring_bills.objects.get(user=request.user, id=id)
     billitem = recurring_bills_items.objects.filter(user=request.user, recur_bills=id)
 
     comp_state = company.state
-    cust = customer.objects.get(customerName=rbill.customer_name)
+    # print(" ".join(rbill.customer_name.split(" ")[1:]))
+    cust = customer.objects.get(customerName=" ".join(rbill.customer_name.split(" ")[1:]))
 
-    gst_or_igst = "GST" if comp_state == cust.placeofsupply else "IGST"
+    gst_or_igst = "GST" if comp_state == rbill.source_supply else "IGST"
 
     tax_total = 0
     for b in billitem:
@@ -4010,8 +4025,47 @@ def export_pdf(request, id):
         return HttpResponse('We had some errors <pre>' + html + '</pre>')
     
     return response
+import io
+import pdfkit
+from pdfkit import from_string
 
 
+@login_required(login_url='login')
+def export_pdf(request, id):
+    company = company_details.objects.get(user=request.user)
+    bills = recurring_bills.objects.filter(user=request.user)
+    rbill = recurring_bills.objects.get(user=request.user, id=id)
+    billitem = recurring_bills_items.objects.filter(user=request.user, recur_bills=id)
+
+    comp_state = company.state
+    # print(" ".join(rbill.customer_name.split(" ")[1:]))
+    cust = customer.objects.get(customerName=" ".join(rbill.customer_name.split(" ")[1:]))
+
+    gst_or_igst = "GST" if comp_state == rbill.source_supply else "IGST"
+
+    tax_total = 0
+    for b in billitem:
+        tax_total += b.tax
+
+    template ='view_recurring_bills.html'
+    context = {
+        'company': company,
+        'recur_bills': bills,
+        'recur_bill': rbill,
+        'bill_item': billitem,
+        'tax': tax_total,
+        "gst_or_igst": gst_or_igst,
+        'customer': cust,
+    }
+    fname=rbill.profile_name
+
+    rendered_html = template.render(context)
+
+    pdf = HTML(string=rendered_html).write_pdf()
+
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{fname}.pdf"'
+    return response
 
 @login_required(login_url='login')
 def recurbill_comment(request):
