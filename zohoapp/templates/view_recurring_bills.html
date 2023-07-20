@@ -345,10 +345,9 @@
                     </div>
 
                     <div class="mx-1">
-                        <a href="{% url 'export_pdf' recur_bill.id %}" class="fa fa-file-pdf btns px-2 py-2"
-                            data-toggle="tooltip" title="PDF"></a>
-                        <!-- <a href=" " class="fa fa-file-pdf btns px-2 py-2" id="toPDF"
-                        data-toggle="tooltip" title="PDF"></a> -->
+                   
+                        <a href=" " class="fa fa-file-pdf btns toPDF px-2 py-2" id="toPDF"
+                        data-toggle="tooltip" title="PDF"></a>
 
                         <a href="" class=" fa fa-print btns px-2 py-2"   data-toggle="tooltip"
                             title="PRINT" onclick="window.print()"> </a>
@@ -391,7 +390,7 @@
                 <div class="row pt-0 m-0 text-center">
                     <div class="col-4 "></div>
                     <div class="col-4 ">
-                        <h4 class="text-uppercase">recurring bills</h4>
+                        <h4 class="text-uppercase text-dark" >recurring bills</h4>
                     </div>
                     <div class="col-4 "></div>
                 </div>
@@ -411,7 +410,9 @@
                         <section class="d-flex justify-content-between">
                             <div class="top-right">
                                 <div class="graphic-path text-center">
-                                    <h5 class="text-capitalize">{{recur_bill.profile_name}}</h5>
+                                    <h5 class="text-capitalize"  >{{recur_bill.profile_name}}</h5>
+                                    <p class="text-capitalize" id="pid" hidden>{{recur_bill.id}}</p>
+
                                 </div>
                                 <div class="position-relative">
                                     <p>Bill Date : &nbsp <span style="color: black;">{{recur_bill.start_date|date:'d-m-Y'}}</span></p>
@@ -910,6 +911,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/print-js/1.6.0/print.js"></script>
  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
 
 
 <script>
@@ -1036,6 +1038,27 @@
   });
 });
 
+$(document).ready(function () {
+        console.log('print');
+
+        $(document).on('click', '.toPDF', function (event) {
+            console.log('print1');
+            event.preventDefault();
+            var element = document.getElementById('Template');
+            
+            var opt =
+            {
+                margin: 0,
+                filename: 'recurring bill_'+$("#pid").text() + '.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 3 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
+
+        });
+
+ });
 
 </script>
 
