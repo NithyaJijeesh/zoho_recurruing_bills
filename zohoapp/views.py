@@ -3419,7 +3419,6 @@ def delete_recurring_bills(request, id):
     return redirect('recurring_bill')
 
 
-    
 @login_required(login_url='login')
 def view_recurring_bills(request,id):
 
@@ -3427,17 +3426,17 @@ def view_recurring_bills(request,id):
     bills = recurring_bills.objects.filter(user = request.user)
     rbill=recurring_bills.objects.get(user = request.user, id= id)
     billitem = recurring_bills_items.objects.filter(user = request.user,recur_bills=id)
-    # print(rbill.customer_name.split(" ")[1:])
-    comp_state = company.state
+    
     cust = customer.objects.get(id = rbill.customer_name.split(" ")[0])
     vend = vendor_table.objects.get(id = rbill.vendor_name.split(" ")[0])
-    gst_or_igst = "GST" if comp_state == rbill.source_supply else "IGST"
-
-
-    tax_total = 0 
+    gst_or_igst = "GST" if company.state == (" ".join(rbill.source_supply.split(" ")[1:])) else "IGST"
+    tax_total = [] 
     for b in billitem:
-        tax_total += b.tax
-
+        if b.tax not in tax_total: 
+            tax_total.append(b.tax)
+    
+    cust_name = cust.customerName
+    vend_name = vend.salutation+ " " +vend.first_name + " " +vend.last_name
     context = {
                 'company' : company,
                 'recur_bills' : bills,
@@ -3447,6 +3446,8 @@ def view_recurring_bills(request,id):
                 "gst_or_igst" : gst_or_igst,
                 'customer' : cust,
                 'vendor' : vend,
+                'customer_name' : cust_name,
+                'vendor_name' : vend_name,
             }
 
     return render(request, 'view_recurring_bills.html',context)
